@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_diettracker" />
+    <include layout="@layout/content_diet_tracker" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
