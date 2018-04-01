@@ -1,5 +1,6 @@
 package group1.fitnessapp.dietTracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,11 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 import group1.fitnessapp.R;
 
 public class DietTrackerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private FoodListAdapter adapt = null;
+    private ArrayList<Food> foodArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +30,11 @@ public class DietTrackerActivity extends AppCompatActivity
         setContentView(R.layout.activity_diet_tracker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // TODO this needs to be changed to the add food fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addFood = (FloatingActionButton) findViewById(R.id.fab);
+        addFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                launchAddFood();
             }
         });
 
@@ -43,6 +46,41 @@ public class DietTrackerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        generateFakeFoodData();
+
+        adapt =  new FoodListAdapter(this, foodArrayList);
+        ListView ls = (ListView) findViewById(R.id.ls_diet_food);
+        ls.setAdapter(adapt);
+    }
+
+    private void addItem(Food food) {
+        foodArrayList.add(food);
+        adapt.notifyDataSetChanged();
+    }
+
+    private void launchAddFood() {
+        Intent intent = new Intent(this, DietAddFood.class);
+        startActivityForResult(intent, 1);
+    }
+
+    private void generateFakeFoodData() {
+        foodArrayList.add(new Food("Test food", "Test description", 200, null));
+        foodArrayList.add(foodArrayList.get(0));
+        foodArrayList.add(foodArrayList.get(0));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                String add_name = data.getStringExtra("SELECTED_FOOD_NAME");
+                String add_sub_txt = data.getStringExtra("SELECTED_FOOD_SUB_TXT");
+                //int add_calories = data.getIntExtra("SELECTED_FOOD_CALORIES");
+                addItem(new Food(add_name, add_sub_txt, 666, null));
+            }
+        }
     }
 
     @Override
@@ -83,17 +121,11 @@ public class DietTrackerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_dietTracker) {
+            // A new instance of this activity shouldn't be made again
+        } else if (id == R.id.nav_excerciseTracker) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_stepTracker) {
 
         }
 
