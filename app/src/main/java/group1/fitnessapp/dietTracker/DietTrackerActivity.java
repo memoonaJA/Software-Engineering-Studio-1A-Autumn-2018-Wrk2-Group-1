@@ -3,8 +3,6 @@ package group1.fitnessapp.dietTracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -30,6 +29,9 @@ public class DietTrackerActivity extends AppCompatActivity
         setContentView(R.layout.activity_diet_tracker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Fab for adding food
+        // TODO MAKE THIS FUNCTION
         FloatingActionButton addFood = (FloatingActionButton) findViewById(R.id.fab);
         addFood.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +62,8 @@ public class DietTrackerActivity extends AppCompatActivity
     }
 
     private void launchAddFood() {
-        Intent intent = new Intent(this, DietAddFood.class);
-        startActivityForResult(intent, 1);
+        Intent intent = new Intent(this, DietAddFoodActivity.class);
+        startActivity(intent);
     }
 
     private void generateFakeFoodData() {
