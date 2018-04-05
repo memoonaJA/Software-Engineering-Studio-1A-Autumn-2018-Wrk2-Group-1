@@ -1,6 +1,8 @@
 package group1.fitnessapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,6 +36,17 @@ public class MainMenuActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        generatePreferences();
+    }
+
+    private void generatePreferences() {
+        System.out.println("generatePreferences");
+        SharedPreferences sharedPreferences =  getSharedPreferences("dietTracker", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("defaultGoal", 1500);
+        editor.apply();
+        System.out.println("done");
     }
 
     @Override

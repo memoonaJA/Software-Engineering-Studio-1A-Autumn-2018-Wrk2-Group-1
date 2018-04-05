@@ -1,16 +1,14 @@
 package group1.fitnessapp.dietTracker;
 
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -52,7 +50,13 @@ public class DietAddFoodActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Food selected = (Food) ls.getItemAtPosition(i);
-                System.out.println("Selected: " +selected.getName());
+                Intent intent = new Intent();
+                intent.putExtra("foodName", selected.getName());
+                intent.putExtra("foodSubText", selected.getSubText());
+                intent.putExtra("foodCalories", selected.getCalories());
+                intent.putExtra("foodOriginalJSON", String.valueOf(selected.getOriginalJSON()));
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
 

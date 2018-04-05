@@ -52,10 +52,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView42"
+                            android:id="@+id/goalTxtView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1600"
                             android:textAlignment="center"
                             android:textStyle="bold" />
 
@@ -95,10 +94,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView44"
+                            android:id="@+id/usedTxtView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="300"
                             android:textAlignment="center"
                             android:textStyle="bold" />
 
@@ -140,10 +138,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView45"
+                            android:id="@+id/remainingTxtView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1300"
                             android:textAlignment="center"
                             android:textStyle="bold" />
 
