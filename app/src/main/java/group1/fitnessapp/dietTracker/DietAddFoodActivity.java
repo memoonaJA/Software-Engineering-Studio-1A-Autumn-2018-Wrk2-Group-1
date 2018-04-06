@@ -53,6 +53,10 @@ public class DietAddFoodActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("foodName", selected.getName());
                 intent.putExtra("foodSubText", selected.getSubText());
+                //TODO ADDRESS THIS HARDCODED VALUE
+                intent.putExtra("foodServings", 1);
+                intent.putExtra("foodServingQuantity", selected.getServingQuantity());
+                intent.putExtra("foodServingUnit", selected.getServingUnit());
                 intent.putExtra("foodCalories", selected.getCalories());
                 intent.putExtra("foodOriginalJSON", String.valueOf(selected.getOriginalJSON()));
                 setResult(RESULT_OK, intent);
