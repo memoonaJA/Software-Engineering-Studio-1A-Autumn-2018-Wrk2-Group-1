@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,16 +11,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -70,9 +67,8 @@ public class DietTrackerActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //TODO implement deletion of a food item using removeFood();
-                System.out.println("-------------------------------------------------------------");
-                System.out.println(adapterView.getItemAtPosition(i));
-                System.out.println("-------------------------------------------------------------");
+                //TODO implement editing of food items;
+                launchEditFood((Food) adapterView.getItemAtPosition(i));
             }
         });
 
@@ -80,6 +76,8 @@ public class DietTrackerActivity extends AppCompatActivity
         getPreferences();
         updateCalories();
     }
+
+
     private void getPreferences() {
         SharedPreferences preferences = getSharedPreferences("dietTracker", Context.MODE_PRIVATE);
         //Calorie goal
@@ -126,6 +124,19 @@ public class DietTrackerActivity extends AppCompatActivity
         startActivityForResult(intent, 1);
     }
 
+    private void launchEditFood(Food food) {
+        Intent intent = new Intent(this, EditFoodActivity.class);
+        intent.putExtra("selectedFoodName",food.getName());
+        intent.putExtra("selectedFoodSubText",food.getSubText());
+        intent.putExtra("selectedFoodCalories",food.getCalories());
+        if(food.getOriginalJSON() == null){
+            intent.putExtra("selectedFoodJSON", (String) null);
+        }else{
+            intent.putExtra("selectedFoodJSON",food.getOriginalJSON().toString());
+        }
+        startActivityForResult(intent, 3);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,9 +147,12 @@ public class DietTrackerActivity extends AppCompatActivity
                 String name = data.getStringExtra("foodName");
                 String subTxt = data.getStringExtra("foodSubText");
                 int calories = data.getIntExtra("foodCalories", 0);
-                //TODO Get this jason part working
-                //String json = data.getStringExtra("foodName");
-                addFood(new Food(name, subTxt, calories, null));
+                String json = data.getStringExtra("foodOriginalJSON");
+                try {
+                    addFood(new Food(name, subTxt, calories, json));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
         // Change settings return logic
@@ -149,10 +163,26 @@ public class DietTrackerActivity extends AppCompatActivity
                 updateCalories();
             }
         }
+
+        // Edit or add food return logic
+        if(requestCode == 3) {
+            if(resultCode == RESULT_OK){
+                System.out.println("Received request code 1");
+                String name = data.getStringExtra("foodName");
+                String subTxt = data.getStringExtra("foodSubText");
+                int calories = data.getIntExtra("foodCalories", 0);
+                String json = data.getStringExtra("foodOriginalJSON");
+                try {
+                    addFood(new Food(name, subTxt, calories, json));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void generateFakeFoodData() {
-        foodArrayList.add(new Food("Test food", "Test description", 200, null));
+        foodArrayList.add(new Food("Test food", "Test description", 200, (JSONObject) null));
         foodArrayList.add(foodArrayList.get(0));
         foodArrayList.add(foodArrayList.get(0));
     }

@@ -37,7 +37,6 @@ public class FoodAPI {
     private ArrayList<Food> asArrayList(JSONObject jsonObject) throws JSONException {
         ArrayList<Food> results = new ArrayList<>();
         JSONArray branded = jsonObject.getJSONArray("branded");
-        JSONArray common = jsonObject.getJSONArray("common");
         for (int i = 0; i  < branded.length(); i++){
             JSONObject foodJSON = branded.getJSONObject(i);
             String name = foodJSON.getString("food_name");
@@ -45,6 +44,8 @@ public class FoodAPI {
             int calories = foodJSON.getInt("nf_calories");
             results.add(new Food(name, subTxt, calories, foodJSON));
         }
+
+        //JSONArray common = jsonObject.getJSONArray("common");
         //for (int i = 0; i  < common.length(); i++){
         //JSONObject food = common.getJSONObject(i);
         //String name = food.getString("food_name");
