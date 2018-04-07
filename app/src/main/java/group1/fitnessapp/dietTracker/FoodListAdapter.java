@@ -38,7 +38,7 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
 
         foodName.setText(food.get(position).getName());
         foodSubTxt.setText(food.get(position).getSubText());
-        foodCalories.setText(Double.toString(food.get(position).getCalories()));
+        foodCalories.setText(Integer.toString((int) food.get(position).getCalories()));
 
         return rowView;
     }
