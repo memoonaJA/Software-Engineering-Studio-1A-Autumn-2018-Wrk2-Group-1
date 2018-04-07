@@ -1,5 +1,12 @@
 package group1.fitnessapp.stepCounter;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,11 +19,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import group1.fitnessapp.R;
 
 public class StepCounterActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
+
+    //Other
+    SensorManager sensorManager;
+    boolean running = false;
+    float stepCountForReset = 0;
+    float stepCountSinceLastReset;
+    float stepCountSinceOnline;
+
+    //Elements
+    private EditText etStepCount;
+    private Button btnReset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +49,16 @@ public class StepCounterActivity extends AppCompatActivity
         setContentView(R.layout.activity_step_counter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Initialize components
+        etStepCount = findViewById(R.id.etStepCount);
+        btnReset = findViewById(R.id.btnReset);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        // TODO delete
+        etStepCount.setText("0");
+        etStepCount.setEnabled(false);
+        etStepCount.setClickable(false);
 
         // TODO this needs to be changed to the add food fab
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -43,6 +78,13 @@ public class StepCounterActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void resetStepCount(View view)
+    {
+        stepCountForReset = stepCountSinceOnline;
+        stepCountSinceLastReset = 0;
+        etStepCount.setText(String.valueOf(stepCountSinceLastReset));
     }
 
     @Override
@@ -100,5 +142,84 @@ public class StepCounterActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        running = true;
+
+        String[] sensorResults = registerSensors(SENSORS_IN_USE.Step_Counter);
+
+        if (sensorResults.length > 0)
+        {
+            String failedSensors = String.join(", ", sensorResults);
+
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Phone Incompatability");
+            alertDialog.setMessage("This phone does not contain the necessary sensors needed: \n" + failedSensors);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
+    }
+
+    private String[] registerSensors(SENSORS_IN_USE... sensors)
+    {
+        ArrayList<String> failedSensorNames = new ArrayList<>();
+
+        for (SENSORS_IN_USE sensorToAdd : sensors)
+        {
+            Sensor sensor = sensorManager.getDefaultSensor(sensorToAdd.getValue());
+
+            if (sensor != null)
+            {
+                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+            }
+            else
+            {
+                failedSensorNames.add(sensorToAdd.name().replaceAll("_", " "));
+            }
+        }
+
+        return failedSensorNames.toArray(new String[0]);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        running = false;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (running)
+        {
+            stepCountSinceOnline = sensorEvent.values[0];
+            stepCountSinceLastReset = sensorEvent.values[0] - stepCountForReset;
+            etStepCount.setText(String.valueOf(stepCountSinceLastReset));
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    public enum SENSORS_IN_USE{
+        Step_Counter(Sensor.TYPE_STEP_COUNTER);
+
+        private final int value;
+
+        SENSORS_IN_USE(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
     }
 }
