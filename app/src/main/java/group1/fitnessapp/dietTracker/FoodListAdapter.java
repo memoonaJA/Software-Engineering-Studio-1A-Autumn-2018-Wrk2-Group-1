@@ -20,8 +20,7 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
     private final Activity context;
     private final ArrayList<Food> food;
 
-    public FoodListAdapter(Activity context,
-                        ArrayList<Food> food) {
+    public FoodListAdapter(Activity context, ArrayList<Food> food) {
         super(context, R.layout.diet_list_row, food);
         this.context = context;
         this.food = food;
@@ -30,15 +29,23 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
     @NonNull
     @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
+        Food f = food.get(position);
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView= inflater.inflate(R.layout.diet_list_row, null, true);
         TextView foodName = (TextView) rowView.findViewById(R.id.txt_food_name);
         TextView foodSubTxt = (TextView) rowView.findViewById(R.id.txt_food_subtxt);
         TextView foodCalories = (TextView) rowView.findViewById(R.id.txt_food_calories);
 
-        foodName.setText(food.get(position).getName());
-        foodSubTxt.setText(food.get(position).getSubText());
-        foodCalories.setText(Integer.toString((int) food.get(position).getCalories()));
+        foodName.setText(f.getName());
+        String servingUnit = null;
+        if(f.getServingUnit().length() > 7){
+            servingUnit = f.getServingUnit().substring(0,5) + "...";
+        }else {
+            servingUnit = f.getServingUnit();
+        }
+        String calculatedServing = (f.getServings() * f.getServingQuantity()) +" " + servingUnit;
+        foodSubTxt.setText(f.getSubText() + ", " +calculatedServing);
+        foodCalories.setText(Integer.toString((int) f.getTotalCalories()));
 
         return rowView;
     }
