@@ -58,7 +58,7 @@ public class FoodSearchASyncTask extends AsyncTask<String, Void, ArrayList<Food>
                 double servingQuantity = foodJSON.getDouble("serving_qty");
                 String servingUnit = foodJSON.getString("serving_unit");
                 double calories = foodJSON.getDouble("nf_calories");
-                results.add(new Food(name, subTxt, 1, servingQuantity, servingUnit, calories, foodJSON));
+                results.add(new Food(name, subTxt, 1, servingQuantity, servingUnit, calories));
             }
 
             //JSONArray common = jsonObject.getJSONArray("common");
