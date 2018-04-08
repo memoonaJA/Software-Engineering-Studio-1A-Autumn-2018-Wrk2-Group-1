@@ -18,9 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
@@ -57,7 +54,7 @@ public class DietTrackerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        generateFakeFoodData();
+        generateTestData();
 
         adapt =  new FoodListAdapter(this, foodArrayList);
         ListView ls = (ListView) findViewById(R.id.ls_diet_food);
@@ -97,8 +94,6 @@ public class DietTrackerActivity extends AppCompatActivity
         TextView caloriesUsed = findViewById(R.id.usedTxtView);
         for (int i = 0; i < adapt.getCount(); i++){
             used += adapt.getItem(i).getCalories();
-            System.out.println("Current count: " + used);
-            System.out.println(adapt.getItem(i).getName() +" " +adapt.getItem(i).getServingQuantity() +" " +adapt.getItem(i).getServingUnit());
         }
         caloriesUsed.setText(String.format("%d", used));
 
@@ -113,8 +108,21 @@ public class DietTrackerActivity extends AppCompatActivity
         updateCalories();
     }
 
-    private void removeFood (Food food){
-        foodArrayList.remove(food);
+    private void removeFood (Food toDelete){
+        Food foundDelete = null;
+        for(Food f : foodArrayList){
+            if (f.getName().equalsIgnoreCase(toDelete.getName())){
+                if (f.getSubText().equalsIgnoreCase(toDelete.getSubText())){
+                    if (f.getTotalCalories()== toDelete.getTotalCalories()){
+                        foundDelete = f;
+                        break;
+                    }
+                }
+            }
+        }
+        if(!foodArrayList.remove(foundDelete)){
+            System.out.println("Delete failed no match found");
+        }
         adapt.notifyDataSetChanged();
         updateCalories();
     }
@@ -126,17 +134,7 @@ public class DietTrackerActivity extends AppCompatActivity
 
     private void launchEditFood(Food food) {
         Intent intent = new Intent(this, EditFoodActivity.class);
-        intent.putExtra("selectedFoodName",food.getName());
-        intent.putExtra("selectedFoodSubText",food.getSubText());
-        intent.putExtra("selectedFoodServings", food.getServings());
-        intent.putExtra("selectedFoodServingQuantity",food.getServingQuantity());
-        intent.putExtra("selectedFoodServingUnit",food.getServingUnit());
-        intent.putExtra("selectedFoodCalories",food.getCalories());
-        if(food.getOriginalJSON() == null){
-            intent.putExtra("selectedFoodJSON", (String) null);
-        }else{
-            intent.putExtra("selectedFoodJSON",food.getOriginalJSON().toString());
-        }
+        intent.putExtra("foodToEdit", food);
         startActivityForResult(intent, 3);
     }
 
@@ -146,19 +144,7 @@ public class DietTrackerActivity extends AppCompatActivity
         // Add food return logic
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
-                System.out.println("Received request code 1");
-                String name = data.getStringExtra("foodName");
-                String subTxt = data.getStringExtra("foodSubText");
-                double servings = data.getDoubleExtra("foodServings", 1);
-                double servingQuantity = data.getDoubleExtra("foodServingQuantity", 0);
-                String servingUnit = data.getStringExtra("foodServingUnit");
-                double calories = data.getDoubleExtra("foodCalories", 0);
-                String json = data.getStringExtra("foodOriginalJSON");
-                try {
-                    addFood(new Food(name, subTxt, servings, servingQuantity, servingUnit, calories, json));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                addFood((Food) data.getSerializableExtra("addFoodEdited"));
             }
         }
         // Change settings return logic
@@ -176,43 +162,26 @@ public class DietTrackerActivity extends AppCompatActivity
                 switch (data.getIntExtra("actionCode", -1)){
                     case -1:
                         // Error wasn't able to get an action code
-                        System.out.println("AN ERROR PASSING INFORMATION BETWEEN ACTIVITIES - actionCODE NOT SET!");
+                        System.out.println("AN ERROR PASSING INFORMATION BETWEEN EDIT FOOD ACTIVITY - actionCODE NOT SET!");
                         break;
                     case 0:
                         // Delete the food item
-                        //TODO this will need to account for servings size
-                        String toDeleteName = data.getStringExtra("foodName");
-                        String toDeleteSubText = data.getStringExtra("foodSubText");
-                        double toDeleteCalories = data.getDoubleExtra("foodCalories", 0);
-                        System.out.println("----------------------------------");
-                        System.out.println("Returned back: " +toDeleteCalories);
-                        System.out.println("----------------------------------");
-                        for(Food food : foodArrayList){
-                            if(food.getName().equalsIgnoreCase(toDeleteName)){
-                                if(food.getSubText().equalsIgnoreCase(toDeleteSubText)){
-                                    if(food.getCalories() == toDeleteCalories){
-                                        removeFood(food);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        removeFood((Food) data.getSerializableExtra("editDeleteFood"));
                         break;
                     case 1:
                         //Edit the food item
-                        System.out.println("------------------------------------------------");
-                        System.out.println("Save button pressed");
-                        System.out.println("------------------------------------------------");
+                        removeFood((Food) data.getSerializableExtra("editSaveFoodOriginal"));
+                        addFood((Food) data.getSerializableExtra("editSaveFoodNew"));
                         break;
                 }
             }
         }
     }
 
-    private void generateFakeFoodData() {
-        foodArrayList.add(new Food("Test food", "Test description",1, 0.0, "test", 200, (JSONObject) null));
-        foodArrayList.add(foodArrayList.get(0));
-        foodArrayList.add(foodArrayList.get(0));
+    private void generateTestData() {
+        foodArrayList.add(new Food("Peach Rings", "JuiceeFuls",1, 50, "g", 238));
+        foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
+
     }
 
     @Override
