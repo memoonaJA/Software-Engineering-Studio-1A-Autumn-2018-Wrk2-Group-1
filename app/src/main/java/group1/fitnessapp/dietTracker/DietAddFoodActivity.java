@@ -49,20 +49,36 @@ public class DietAddFoodActivity extends AppCompatActivity {
         ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Food selected = (Food) ls.getItemAtPosition(i);
-                Intent intent = new Intent();
-                intent.putExtra("foodName", selected.getName());
-                intent.putExtra("foodSubText", selected.getSubText());
-                //TODO ADDRESS THIS HARDCODED VALUE
-                intent.putExtra("foodServings", 1);
-                intent.putExtra("foodServingQuantity", selected.getServingQuantity());
-                intent.putExtra("foodServingUnit", selected.getServingUnit());
-                intent.putExtra("foodCalories", selected.getCalories());
-                intent.putExtra("foodOriginalJSON", String.valueOf(selected.getOriginalJSON()));
-                setResult(RESULT_OK, intent);
-                finish();
+                Food clicked = (Food) ls.getItemAtPosition(i);
+                launchAddFoodEdit(clicked);
             }
         });
+    }
 
+    private void launchAddFoodEdit(Food food) {
+        Intent intent = new Intent(this, AddFoodEditActivity.class);
+        intent.putExtra("addFoodToEdit", food);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        //Return logic from the addFoodEdit activity
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                switch (data.getIntExtra("returnCode", -1)) {
+                    case -1:
+                        break;
+                    case 0:
+                        //No logic need, continue searching for a food
+                        break;
+                    case 1:
+                        setResult(RESULT_OK, data);
+                        finish();
+                        break;
+                }
+            }
+        }
     }
 }
