@@ -3,41 +3,41 @@ package group1.fitnessapp.dietTracker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by aaron on 1/04/2018.
  */
 
-public class Food {
+public class Food implements Serializable{
     private String name;
     private String subText;
     private double servings;
     private double servingQuantity;
     private String servingUnit;
     private double calories;
-    private final JSONObject originalJSON;
 
-    public Food(String name, String subText, double servings, double servingQuantity, String servingUnit, double calories, JSONObject original) {
+    public Food(String name, String subText, double servings, double servingQuantity, String servingUnit, double calories) {
         this.name = name;
         this.subText = subText;
         this.servings = servings;
         this.servingQuantity = servingQuantity;
         this.servingUnit = servingUnit;
         this.calories = calories;
-        this.originalJSON = original;
     }
 
-    public Food(String name, String subText, double servings, double servingQuantity, String servingUnit, double calories, String original) throws JSONException {
-        this.name = name;
-        this.subText = subText;
+    public Food(Food food){
+        this.name = food.getName();
+        this.subText = food.getSubText();
+        this.servings = food.servings;
+        this.servingQuantity = food.getServingQuantity();
+        this.servingUnit = food.servingUnit;
+        this.calories = food.calories;
+    }
+
+    public Food editServings(double servings){
         this.servings = servings;
-        this.servingQuantity = servingQuantity;
-        this.servingUnit = servingUnit;
-        this.calories = calories;
-        if(original != null){
-            this.originalJSON = new JSONObject(original);
-        }else {
-            this.originalJSON = null;
-        }
+        return this;
     }
 
     public String getName() {
@@ -56,10 +56,6 @@ public class Food {
         return (calories * servings);
     }
 
-    public JSONObject getOriginalJSON() {
-        return originalJSON;
-    }
-
     public double getServings(){
         return servings;
     }
@@ -70,6 +66,11 @@ public class Food {
 
     public String getServingUnit() {
         return servingUnit;
+    }
+
+    @Override
+    public String toString(){
+        return name +" " +subText +" " +servings +" " +getTotalCalories();
     }
 
 }
