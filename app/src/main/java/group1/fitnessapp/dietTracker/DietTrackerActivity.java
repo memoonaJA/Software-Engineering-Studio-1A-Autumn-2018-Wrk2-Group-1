@@ -76,7 +76,6 @@ public class DietTrackerActivity extends AppCompatActivity
 
     private void getPreferences() {
         SharedPreferences preferences = getSharedPreferences("dietTracker", Context.MODE_PRIVATE);
-        //Calorie goal
         if (preferences.contains("userGoal")){
             goal = preferences.getInt("userGoal", 99999);
         }else{
@@ -187,7 +186,7 @@ public class DietTrackerActivity extends AppCompatActivity
     }
 
     private void generateTestData() {
-        foodArrayList.add(new Food("Peach Rings", "JuiceeFuls",1, 50, "g", 238));
+        foodArrayList.add(new Food("Peach Rings", "JuiceFuls",1, 50, "g", 238));
         foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
 
     }
