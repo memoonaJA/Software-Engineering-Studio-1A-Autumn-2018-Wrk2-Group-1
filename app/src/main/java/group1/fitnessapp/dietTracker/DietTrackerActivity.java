@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -145,6 +146,7 @@ public class DietTrackerActivity extends AppCompatActivity
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 addFood((Food) data.getSerializableExtra("addFoodEdited"));
+                showToast("Food saved");
             }
         }
         // Change settings return logic
@@ -153,6 +155,7 @@ public class DietTrackerActivity extends AppCompatActivity
                 System.out.println("Received request code 2");
                 getPreferences();
                 updateCalories();
+                showToast("Settings saved");
             }
         }
 
@@ -162,20 +165,26 @@ public class DietTrackerActivity extends AppCompatActivity
                 switch (data.getIntExtra("actionCode", -1)){
                     case -1:
                         // Error wasn't able to get an action code
-                        System.out.println("AN ERROR PASSING INFORMATION BETWEEN EDIT FOOD ACTIVITY - actionCODE NOT SET!");
+                        showToast("Error editing food");
                         break;
                     case 0:
                         // Delete the food item
                         removeFood((Food) data.getSerializableExtra("editDeleteFood"));
+                        showToast("Food deleted");
                         break;
                     case 1:
                         //Edit the food item
                         removeFood((Food) data.getSerializableExtra("editSaveFoodOriginal"));
                         addFood((Food) data.getSerializableExtra("editSaveFoodNew"));
+                        showToast("Food saved");
                         break;
                 }
             }
         }
+    }
+
+    private void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     private void generateTestData() {
