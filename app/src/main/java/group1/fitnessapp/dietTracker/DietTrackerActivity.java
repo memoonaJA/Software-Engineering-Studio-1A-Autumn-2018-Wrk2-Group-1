@@ -64,7 +64,6 @@ public class DietTrackerActivity extends AppCompatActivity
         ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //TODO implement editing of food items;
                 launchEditFood((Food) adapterView.getItemAtPosition(i));
             }
         });
