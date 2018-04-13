@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +24,12 @@ import java.util.ArrayList;
 
 import group1.fitnessapp.R;
 
-public class DietTrackerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class DietTrackerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    // All GUI elements of the activity
+    private ProgressBar remainingProgressBar = null;
+    private ListView ls = null;
+
+    // Food list items
     private FoodListAdapter adapt = null;
     private ArrayList<Food> foodArrayList = new ArrayList<>();
     private int goal = 0;
@@ -33,12 +38,30 @@ public class DietTrackerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diet_tracker);
+
+        // Finding GUI Elements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        // Fab for adding food
+        remainingProgressBar = findViewById(R.id.dietProgressBar);
+        adapt =  new FoodListAdapter(this, foodArrayList);
+        ls = (ListView) findViewById(R.id.ls_diet_food);
+        ls.setAdapter(adapt);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         FloatingActionButton addFood = (FloatingActionButton) findViewById(R.id.fab);
+
+        //Listeners
+        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                launchEditFood((Food) adapterView.getItemAtPosition(i));
+            }
+        });
         addFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,34 +69,13 @@ public class DietTrackerActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        // Startup setup functions
         generateTestData();
-
-        adapt =  new FoodListAdapter(this, foodArrayList);
-        ListView ls = (ListView) findViewById(R.id.ls_diet_food);
-        ls.setAdapter(adapt);
-
-        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                launchEditFood((Food) adapterView.getItemAtPosition(i));
-            }
-        });
-
-        // Logic to set all the calories text
         getPreferences();
         updateCalories();
     }
 
-
+    // Startup Functions
     private void getPreferences() {
         SharedPreferences preferences = getSharedPreferences("dietTracker", Context.MODE_PRIVATE);
         if (preferences.contains("userGoal")){
@@ -83,6 +85,13 @@ public class DietTrackerActivity extends AppCompatActivity
         }
     }
 
+    private void generateTestData() {
+        foodArrayList.add(new Food("Peach Rings", "JuiceFuls",1, 50, "g", 238));
+        foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
+
+    }
+
+    // Common Functions
     private void updateCalories() {
         // Calorie goal
         TextView calorieGoal = findViewById(R.id.goalTxtView);
@@ -92,13 +101,17 @@ public class DietTrackerActivity extends AppCompatActivity
         int used = 0;
         TextView caloriesUsed = findViewById(R.id.usedTxtView);
         for (int i = 0; i < adapt.getCount(); i++){
-            used += adapt.getItem(i).getCalories();
+            used += adapt.getItem(i).getTotalCalories();
         }
         caloriesUsed.setText(String.format("%d", used));
 
         // Calories Remaining
         TextView caloriesRemaining = findViewById(R.id.remainingTxtView);
         caloriesRemaining.setText(String.format("%d", (goal - used)));
+
+        //Update Progress Bar
+        remainingProgressBar.setMax(goal);
+        remainingProgressBar.setProgress(used, true);
     }
 
     private void addFood(Food food) {
@@ -126,6 +139,11 @@ public class DietTrackerActivity extends AppCompatActivity
         updateCalories();
     }
 
+    private void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
+    //Launch activity functions
     private void launchAddFood() {
         Intent intent = new Intent(this, DietAddFoodActivity.class);
         startActivityForResult(intent, 1);
@@ -137,6 +155,7 @@ public class DietTrackerActivity extends AppCompatActivity
         startActivityForResult(intent, 3);
     }
 
+    // Logic for return data from activities
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -150,7 +169,6 @@ public class DietTrackerActivity extends AppCompatActivity
         // Change settings return logic
         if(requestCode == 2) {
             if(resultCode == RESULT_OK){
-                System.out.println("Received request code 2");
                 getPreferences();
                 updateCalories();
                 showToast("Settings saved");
@@ -174,21 +192,12 @@ public class DietTrackerActivity extends AppCompatActivity
                         //Edit the food item
                         removeFood((Food) data.getSerializableExtra("editSaveFoodOriginal"));
                         addFood((Food) data.getSerializableExtra("editSaveFoodNew"));
+                        updateCalories();
                         showToast("Food saved");
                         break;
                 }
             }
         }
-    }
-
-    private void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
-    private void generateTestData() {
-        foodArrayList.add(new Food("Peach Rings", "JuiceFuls",1, 50, "g", 238));
-        foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
-
     }
 
     @Override
@@ -201,6 +210,7 @@ public class DietTrackerActivity extends AppCompatActivity
         }
     }
 
+    // Misc Menu functions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
