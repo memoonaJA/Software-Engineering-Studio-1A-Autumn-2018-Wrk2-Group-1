@@ -21,13 +21,6 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
     private final Activity context;
     private final ArrayList<Food> food;
 
-    // GUI elements
-    private TextView foodName = null;
-    private TextView foodSubTxt = null;
-    private TextView foodCalories = null;
-    private View rowView = null;
-    private LayoutInflater inflater = null;
-
     public FoodListAdapter(Activity context, ArrayList<Food> food) {
         super(context, R.layout.diet_list_row, food);
         this.context = context;
@@ -38,12 +31,13 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
     @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
         Food f = food.get(position);
+        LayoutInflater inflater = context.getLayoutInflater();
+        View rowView = inflater.inflate(R.layout.diet_list_row, null, true);
 
         // Getting GUI elements
-        foodName = (TextView) rowView.findViewById(R.id.txt_food_name);
-        foodSubTxt = (TextView) rowView.findViewById(R.id.txt_food_subtxt);
-        foodCalories = (TextView) rowView.findViewById(R.id.txt_food_calories);
-        inflater = context.getLayoutInflater();
+        TextView foodName = (TextView) rowView.findViewById(R.id.txt_food_name);
+        TextView foodSubTxt = (TextView) rowView.findViewById(R.id.txt_food_subtxt);
+        TextView foodCalories = (TextView) rowView.findViewById(R.id.txt_food_calories);
 
         // Setting text
         foodName.setText(f.getName());
@@ -58,7 +52,6 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
         foodSubTxt.setText(subtext);
         foodCalories.setText(String.format(Locale.getDefault(), "%d", (int) f.getTotalCalories()));
 
-        rowView = inflater.inflate(R.layout.diet_list_row, null, true);
         return rowView;
     }
 }
