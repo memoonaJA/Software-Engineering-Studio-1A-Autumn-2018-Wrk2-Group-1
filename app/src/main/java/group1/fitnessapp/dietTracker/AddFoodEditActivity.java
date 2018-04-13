@@ -13,30 +13,38 @@ import android.widget.TextView;
 import group1.fitnessapp.R;
 
 public class AddFoodEditActivity extends AppCompatActivity {
+    // Food variables
     private Food originalFood = null;
     private Food editedFood = null;
 
+    // GUI elements
     private TextView name = null;
     private TextView subtext = null;
     private TextView calories = null;
     private EditText servings = null;
     private TextView servingSize = null;
+    private ImageButton back = null;
+    private ImageButton add = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food_edit);
 
+        // Getting data from intent
+        originalFood = (Food) getIntent().getSerializableExtra("addFoodToEdit");
+        editedFood = new Food(originalFood);
+
+        // Getting all GUI elements
         name = findViewById(R.id.addFoodName);
         subtext = findViewById(R.id.addFoodSubText);
         calories = findViewById(R.id.addFoodCalories);
         servings = findViewById(R.id.addEditFoodServings);
         servingSize = findViewById(R.id.addFoodServingsQuantity);
-        originalFood = (Food) getIntent().getSerializableExtra("addFoodToEdit");
-        editedFood = new Food(originalFood);
-        populateFields();
+        add = findViewById(R.id.addBtnAdd);
+        back = findViewById(R.id.addBtnBack);
 
-        // Edit text fields update logic
+        // Listeners
         servings.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -54,8 +62,6 @@ public class AddFoodEditActivity extends AppCompatActivity {
             }
         });
 
-
-        ImageButton add = findViewById(R.id.addBtnAdd);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,7 +69,6 @@ public class AddFoodEditActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton back = findViewById(R.id.addBtnBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +78,9 @@ public class AddFoodEditActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Startup functions
+        populateFields();
     }
 
     private void populateFields() {
