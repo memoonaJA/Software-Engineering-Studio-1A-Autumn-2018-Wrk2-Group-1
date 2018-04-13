@@ -26,9 +26,18 @@
             android:name=".dietTracker.DietTrackerActivity"
             android:label="@string/title_activity_diet_tracker"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dietTracker.DietAddFoodActivity" />
-        <activity android:name=".dietTracker.DietTrackerSettingsActivity" />
-        <activity android:name=".dietTracker.EditFoodActivity"></activity>
+        <activity
+            android:name=".dietTracker.DietAddFoodActivity"
+            android:label="DietTrackerAddFoodActivity"/>
+        <activity
+            android:name=".dietTracker.AddFoodEditActivity"
+            android:label="DietTrackerAddFoodEditAActivity"/>
+        <activity
+            android:name=".dietTracker.DietTrackerSettingsActivity"
+            android:label="DietTrackerSettingsActivity"/>
+        <activity
+            android:name=".dietTracker.EditFoodActivity"
+            android:label="DietTrackerEditActivity"/>
     </application>
 
 </manifest>
