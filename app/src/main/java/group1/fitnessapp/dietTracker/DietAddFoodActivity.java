@@ -15,20 +15,31 @@ import java.util.concurrent.ExecutionException;
 import group1.fitnessapp.R;
 
 public class DietAddFoodActivity extends AppCompatActivity {
+    // GUI elements
     private ArrayList<Food> results = new ArrayList<>();
     private FoodListAdapter adapt = null;
+    private SearchView searchView = null;
+    private ListView ls = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diet_add_food);
 
-        final SearchView searchView = findViewById(R.id.addFoodSearchView);
+        // Getting GUI elements
+        searchView = findViewById(R.id.addFoodSearchView);
+        adapt = new FoodListAdapter(this, results);
+        ls = (ListView) findViewById(R.id.ls_results);
+        ls.setAdapter(adapt);
+
+
+        // Listeners
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String search) {
                 AsyncTask<String, Void, ArrayList<Food>> asyncTask = new FoodSearchASyncTask().execute(search);
                 try {
+                    searchView.clearFocus();
                     results.clear();
                     results.addAll(asyncTask.get());
                 } catch (InterruptedException | ExecutionException e) {
@@ -43,14 +54,10 @@ public class DietAddFoodActivity extends AppCompatActivity {
             }
         });
 
-        adapt = new FoodListAdapter(this, results);
-        final ListView ls = (ListView) findViewById(R.id.ls_results);
-        ls.setAdapter(adapt);
         ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Food clicked = (Food) ls.getItemAtPosition(i);
-                launchAddFoodEdit(clicked);
+                launchAddFoodEdit((Food) ls.getItemAtPosition(i));
             }
         });
     }
@@ -61,6 +68,7 @@ public class DietAddFoodActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+    // Logic for return data from activities
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -69,11 +77,13 @@ public class DietAddFoodActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 switch (data.getIntExtra("returnCode", -1)) {
                     case -1:
+                        //Error unexpected return code or no return code
                         break;
                     case 0:
                         //No logic need, continue searching for a food
                         break;
                     case 1:
+                        // Add the food, pass straight back to parent activity
                         setResult(RESULT_OK, data);
                         finish();
                         break;
