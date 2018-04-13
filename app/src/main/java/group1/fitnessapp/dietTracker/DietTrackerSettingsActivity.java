@@ -10,28 +10,38 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import group1.fitnessapp.R;
 
 public class DietTrackerSettingsActivity extends AppCompatActivity {
+    // GUI elements
+    private TextView currentGoal = null;
+    private Button settingsSave = null;
+
+    //Preferences
+    private SharedPreferences preferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diet_tracker_settings);
 
+        // Getting GUI elements
+        currentGoal = findViewById(R.id.currentGoalText);
+        settingsSave = findViewById(R.id.saveSettingsBtn);
+
         //Getting and setting current currentGoal
-        final SharedPreferences preferences = getSharedPreferences("dietTracker", Context.MODE_PRIVATE);
-        int currentGoal1 = 0;
+        preferences = getSharedPreferences("dietTracker", Context.MODE_PRIVATE);
+        int currentGoal1;
         if (preferences.contains("userGoal")){
             currentGoal1 = preferences.getInt("userGoal", 99999);
         }else{
             currentGoal1 = preferences.getInt("defaultGoal", 99999);
         }
-        final TextView currentGoal = findViewById(R.id.currentGoalText);
-        currentGoal.setText(String.format("%d", currentGoal1));
+        currentGoal.setText(String.format(Locale.getDefault(),"%d", currentGoal1));
 
-        //Saving new settings
-        Button settingsSave = findViewById(R.id.saveSettingsBtn);
+        //Listeners
         settingsSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
