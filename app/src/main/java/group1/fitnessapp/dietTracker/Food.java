@@ -17,6 +17,7 @@ public class Food implements Serializable{
     private String servingUnit;
     private double calories;
 
+    // Constructors
     public Food(String name, String subText, double servings, double servingQuantity, String servingUnit, double calories) {
         this.name = name;
         this.subText = subText;
@@ -35,11 +36,8 @@ public class Food implements Serializable{
         this.calories = food.calories;
     }
 
-    public Food editServings(double servings){
-        this.servings = servings;
-        return this;
-    }
 
+    // Getters
     public String getName() {
         return name;
     }
@@ -68,9 +66,15 @@ public class Food implements Serializable{
         return servingUnit;
     }
 
+    // Setters
+    public Food editServings(double servings){
+        this.servings = servings;
+        return this;
+    }
+
+
     @Override
     public String toString(){
         return name +" " +subText +" " +servings +" " +getTotalCalories();
     }
-
 }
