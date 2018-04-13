@@ -10,23 +10,31 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import group1.fitnessapp.R;
 
 public class EditFoodActivity extends AppCompatActivity {
-    private Food originalFood = null;
-    private Food editedFood = null;
-
+    // GUI elements
     private TextView name = null;
     private TextView subText = null;
     private TextView calories = null;
     private EditText servings = null;
     private TextView servingSize = null;
+    private ImageButton back = null;
+    private ImageButton save = null;
+    private ImageButton delete = null;
+
+    // Food variables
+    private Food originalFood = null;
+    private Food editedFood = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_food);
 
+        // Getting GUI elements
         name = findViewById(R.id.addFoodName);
         subText = findViewById(R.id.addFoodSubText);
         calories = findViewById(R.id.displayFoodCalories);
@@ -34,29 +42,24 @@ public class EditFoodActivity extends AppCompatActivity {
         servingSize = findViewById(R.id.addFoodServingsQuantity);
         originalFood = (Food) getIntent().getSerializableExtra("foodToEdit");
         editedFood = new Food(originalFood);
-        populateFields();
+        back = findViewById(R.id.addBtnBack);
+        save = findViewById(R.id.btnSave);
+        delete = findViewById(R.id.btnDelete);
 
-        // Edit text fields update logic
+        // Listeners
         servings.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
                 updateFields();
             }
         });
 
-
-        // All the buttons and there functions
-        ImageButton back = findViewById(R.id.addBtnBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +67,6 @@ public class EditFoodActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton save = findViewById(R.id.btnSave);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,13 +74,15 @@ public class EditFoodActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton delete = findViewById(R.id.btnDelete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 deleteFood(originalFood);
             }
         });
+
+        // Activity start functions
+        populateFields();
     }
 
     private void saveFood() {
@@ -101,8 +105,8 @@ public class EditFoodActivity extends AppCompatActivity {
     private void populateFields() {
         name.setText(originalFood.getName());
         subText.setText(originalFood.getSubText());
-        calories.setText(Integer.toString((int) originalFood.getTotalCalories()));
-        servings.setText(Double.toString(originalFood.getServings()));
+        calories.setText(String.format(Locale.getDefault(), "%d", (int) originalFood.getTotalCalories()));
+        servings.setText(String.format(Locale.getDefault(), "%1$,.2f", originalFood.getServings()));
         String servingQuantity = originalFood.getServingQuantity() +" " +originalFood.getServingUnit();
         servingSize.setText(servingQuantity);
     }
@@ -111,9 +115,8 @@ public class EditFoodActivity extends AppCompatActivity {
         try{
             double newServings = Double.parseDouble(servings.getText().toString());
             editedFood = editedFood.editServings(newServings);
-            calories.setText(Integer.toString((int)editedFood.getTotalCalories()));
+            calories.setText(String.format(Locale.getDefault(), "%d", (int) editedFood.getTotalCalories()));
         }catch (NumberFormatException e){
-            System.out.println(e);
             calories.setText("0");
         }
     }
