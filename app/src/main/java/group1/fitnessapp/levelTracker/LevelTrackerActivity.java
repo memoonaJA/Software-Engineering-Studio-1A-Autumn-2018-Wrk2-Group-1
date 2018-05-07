@@ -30,7 +30,7 @@ import group1.fitnessapp.R;
 public class LevelTrackerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
-    //Other
+    //Olther
     SensorManager sensorManager;
     boolean running = false;
     float flightsClimbed = 0;
