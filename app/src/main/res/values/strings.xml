@@ -11,4 +11,7 @@
     <!-- Step Counter values -->
     <string name="title_activity_step_counter">Step Counter</string>
     <string name="button_reset_step_counter">Reset</string>
+
+    <!-- Level Tracker values -->
+    <string name ="title_activity_level_tracker">Level Tracker</string>
 </resources>
