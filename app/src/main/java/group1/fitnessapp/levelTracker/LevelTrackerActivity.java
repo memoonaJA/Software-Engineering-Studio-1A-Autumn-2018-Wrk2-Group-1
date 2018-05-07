@@ -1,4 +1,4 @@
-package group1.fitnessapp.stepCounter;
+package group1.fitnessapp.levelTracker;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,42 +19,46 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
 
-public class StepCounterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
+public class LevelTrackerActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
     //Other
     SensorManager sensorManager;
     boolean running = false;
-    float stepCountForReset = 0;
-    float stepCountSinceLastReset;
-    float stepCountSinceOnline;
+    float flightsClimbed = 0;
+    int samples = 0;
+    int valIndex = 0;
+    ArrayList<Float> recordedVals = new ArrayList<>();
 
     //Elements
-    private EditText etStepCount;
-    private Button btnReset;
+    private EditText etBaro;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step_counter);
+        setContentView(R.layout.activity_level_tracker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Initialize components
-        etStepCount = findViewById(R.id.etBaro);
-        btnReset = findViewById(R.id.btnReset);
+        etBaro = findViewById(R.id.etBaro);
+        tvTitle = findViewById(R.id.tvTitle);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         // TODO delete
-        etStepCount.setText("0");
-        etStepCount.setEnabled(false);
-        etStepCount.setClickable(false);
+        etBaro.setText("0");
+        etBaro.setEnabled(false);
+        etBaro.setClickable(false);
+        tvTitle.setText("Level Tracker???");
 
         // TODO this needs to be changed to the add food fab
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -76,13 +80,6 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void resetStepCount(View view)
-    {
-        stepCountForReset = stepCountSinceOnline;
-        stepCountSinceLastReset = 0;
-        etStepCount.setText(String.valueOf(stepCountSinceLastReset));
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -96,7 +93,7 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.step_counter, menu);
+        getMenuInflater().inflate(R.menu.level_tracker, menu);
         return true;
     }
 
@@ -145,7 +142,7 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         super.onResume();
         running = true;
 
-        String[] sensorResults = registerSensors(SENSORS_IN_USE.Step_Counter);
+        String[] sensorResults = registerSensors(SENSORS_IN_USE.Pressure_Sensor);
 
         if (sensorResults.length > 0)
         {
@@ -196,10 +193,58 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (running)
         {
-            stepCountSinceOnline = sensorEvent.values[0];
-            stepCountSinceLastReset = sensorEvent.values[0] - stepCountForReset;
-            etStepCount.setText(String.valueOf(stepCountSinceLastReset));
+            samples++;
+            etBaro.setText(String.valueOf(samples));
+
+            if (samples >= 20)
+            {
+                samples = 0;
+                recordedVals.add(valIndex, sensorEvent.values[0]);
+
+                if (valIndex == 50)
+                {
+                    valIndex = 0;
+                    analyzeData();
+                }
+                else
+                {
+                    valIndex++;
+                }
+
+            }
+           // etBaro.setText(String.valueOf(flightsClimbed));
         }
+    }
+
+    private void analyzeData()
+    {
+        if (highest() - lowest() >= 0.1)
+        {
+            flightsClimbed++;
+            Toast.makeText(this, String.valueOf(samples), Toast.LENGTH_SHORT).show();
+        }
+
+        recordedVals.clear();
+    }
+
+    private float lowest()
+    {
+        float min = recordedVals.get(0);
+        for (float val: recordedVals) {
+            min = val <= min ? val : min;
+        }
+
+        return min;
+    }
+
+    private float highest()
+    {
+        float max = recordedVals.get(0);
+        for (float val: recordedVals) {
+            max = val >= max ? val : max;
+        }
+
+        return max;
     }
 
     @Override
@@ -208,10 +253,9 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     }
 
     public enum SENSORS_IN_USE{
-        Step_Counter(Sensor.TYPE_STEP_COUNTER);
+        Pressure_Sensor(Sensor.TYPE_PRESSURE);
 
         private final int value;
-
         SENSORS_IN_USE(final int newValue) {
             value = newValue;
         }

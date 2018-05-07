@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="group1.fitnessapp.stepCounter.StepCounterActivity"
+    tools:context="group1.fitnessapp.levelTracker.LevelTrackerActivity"
     tools:layout_editor_absoluteY="81dp"
-    tools:showIn="@layout/app_bar_step_counter">
+    tools:showIn="@layout/app_bar_level_tracker">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -16,7 +16,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/title_activity_step_counter"
+        android:text="@string/title_activity_level_tracker"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
