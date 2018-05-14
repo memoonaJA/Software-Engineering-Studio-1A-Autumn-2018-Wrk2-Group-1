@@ -57,7 +57,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
 
     // CREATE --------------------------------------------------------------------------------------
     // Add a food to the db as new foods are added and return the foods primary key in the db
-    public int foodLogAdd(String date, Food food){
+    public void foodLogAdd(String date, Food food){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -72,10 +72,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
         db.insert(TABLE_NAME, null, values);
 
         // TODO Fetch the auto assigned key id for the new food
-        int key_id = 0;
-
         db.close();
-        return key_id;
     }
 
     // READ ----------------------------------------------------------------------------------------
@@ -130,7 +127,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
         db.close();
     }
 
-    // DELETE -------------------------------------------------------------------------------------=
+    // DELETE --------------------------------------------------------------------------------------
     // Remove food from log
     public boolean deleteFood(int delKeyID){
         SQLiteDatabase db = this.getWritableDatabase();

@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 
 public class Food implements Serializable{
+    //private int keyID;
     private String name;
     private String subText;
     private double servings;
@@ -19,6 +20,7 @@ public class Food implements Serializable{
 
     // Constructors
     public Food(String name, String subText, double servings, double servingQuantity, String servingUnit, double calories) {
+        //this.keyID = -1;
         this.name = name;
         this.subText = subText;
         this.servings = servings;
@@ -28,6 +30,7 @@ public class Food implements Serializable{
     }
 
     public Food(Food food){
+        //this.keyID = -1;
         this.name = food.getName();
         this.subText = food.getSubText();
         this.servings = food.servings;
@@ -38,6 +41,10 @@ public class Food implements Serializable{
 
 
     // Getters
+//    public int getKeyID(){
+//        return keyID;
+//    }
+
     public String getName() {
         return name;
     }
@@ -67,11 +74,14 @@ public class Food implements Serializable{
     }
 
     // Setters
+//    public void setKeyID(int id){
+//        this.keyID = id;
+//    }
+
     public Food editServings(double servings){
         this.servings = servings;
         return this;
     }
-
 
     @Override
     public String toString(){
