@@ -23,16 +23,14 @@ import group1.fitnessapp.dietTracker.DietTrackerActivity;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
 
 public class ExerciseTrackerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    // Workout variables
-    private ArrayList<Workout> workouts = new ArrayList<Workout>();
 
     // GUI elements
     private Toolbar toolbar = null;
     private DrawerLayout drawer = null;
     private NavigationView navigationView = null;
-    private RecyclerView recyclerView = null;
-    private RecyclerView.Adapter adapter = null;
-    private RecyclerView.LayoutManager layoutManager = null;
+    private RecyclerView recyclerView;
+    private MenuListAdapter adapter;
+    private ArrayList<ExerciseMenuItem> menuList = new ArrayList<ExerciseMenuItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +42,15 @@ public class ExerciseTrackerActivity extends AppCompatActivity implements Naviga
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.exerciseMenuView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new WorkoutAdapter(workouts);
+        menuList.add(new ExerciseMenuItem(R.drawable.chest, "Chest", 0));
+        menuList.add(new ExerciseMenuItem(R.drawable.arm, "Arm", 1));
+        menuList.add(new ExerciseMenuItem(R.drawable.leg, "Leg", 2));
+        menuList.add(new ExerciseMenuItem(R.drawable.back, "Back", 3));
+        menuList.add(new ExerciseMenuItem(R.drawable.shoulder, "Shoulder", 4));
+        adapter = new MenuListAdapter(this, menuList);
         recyclerView.setAdapter(adapter);
 
         setSupportActionBar(toolbar);

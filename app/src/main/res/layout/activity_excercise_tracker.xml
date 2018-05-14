@@ -23,3 +23,5 @@
         app:menu="@menu/activity_excercise_tracker_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
+
+

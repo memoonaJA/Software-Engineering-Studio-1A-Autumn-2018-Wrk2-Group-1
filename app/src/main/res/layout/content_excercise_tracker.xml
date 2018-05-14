@@ -8,11 +8,14 @@
     tools:context=".excerciseTracker.ExerciseTrackerActivity"
     tools:showIn="@layout/app_bar_excercise_tracker">
 
+    <!--368dp, 495dp-->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="368dp"
+        android:id="@+id/exerciseMenuView"
+        android:layout_width="388dp"
         android:layout_height="495dp"
         android:scrollbars="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"/>
+    <!--tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" -->
 </android.support.constraint.ConstraintLayout>

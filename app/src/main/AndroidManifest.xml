@@ -45,7 +45,10 @@
         <activity
             android:name=".excerciseTracker.ExerciseTrackerActivity"
             android:label="@string/title_activity_excercise_tracker"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".excerciseTracker.ViewExercisesActivity" />
+        <activity android:name=".excerciseTracker.AddExerciseActivity" />
+        <activity android:name=".excerciseTracker.AddSelectedExerciseActivity"></activity>
     </application>
 
 </manifest>
