@@ -3,6 +3,7 @@ package group1.fitnessapp.dietTracker;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -17,6 +18,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "DietLog";
 
     // Table columns names
+    public static final String FOOD_KEY_ID = "key_id";
     public static final String FOOD_LOG_DATE = "log_date";
     public static final String FOOD_NAME = "name";
     public static final String FOOD_SUBTEXT = "subtext";
@@ -34,6 +36,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+                + FOOD_KEY_ID + "INTEGER PRIMARY KEY,"
                 + FOOD_LOG_DATE + "TEXT,"
                 + FOOD_NAME + "TEXT,"
                 + FOOD_SUBTEXT + "TEXT,"
@@ -50,8 +53,11 @@ public class DietDBHandler extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    // Add a food to the db as new foods are added
-    void foodLogAdd(String date, Food food){
+    // Crud methods here
+
+    // CREATE --------------------------------------------------------------------------------------
+    // Add a food to the db as new foods are added and return the foods primary key in the db
+    public int foodLogAdd(String date, Food food){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -64,27 +70,15 @@ public class DietDBHandler extends SQLiteOpenHelper{
         values.put(FOOD_CALORIES, food.getCalories());
 
         db.insert(TABLE_NAME, null, values);
+
+        // TODO Fetch the auto assigned key id for the new food
+        int key_id = 0;
+
         db.close();
+        return key_id;
     }
 
-    // TODO Update an added food in the db
-    void foodLogUpdate(String date, Food original, Food food){
-        // Check for data redundancy first with inDB() or with primary key system
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(FOOD_LOG_DATE, date);
-        values.put(FOOD_NAME, food.getName());
-        values.put(FOOD_SUBTEXT, food.getSubText());
-        values.put(FOOD_SERVINGS, food.getServings());
-        values.put(FOOD_SERVINGS_QTY, food.getServingQuantity());
-        values.put(FOOD_SERVINGS_UNIT, food.getServingUnit());
-        values.put(FOOD_CALORIES, food.getCalories());
-
-        db.insert(TABLE_NAME, null, values);
-        db.close();
-    }
-
+    // READ ----------------------------------------------------------------------------------------
     // Return an array list of all foods added
     public ArrayList<Food> getLogAll(){
         ArrayList<Food> log = new ArrayList<>();
@@ -116,6 +110,27 @@ public class DietDBHandler extends SQLiteOpenHelper{
         return null;
     }
 
+    // UPDATE --------------------------------------------------------------------------------------
+    // TODO Update an added food in the db
+    // Currently unused because of how the activity handles food updates with a destroy and add
+    void foodLogUpdate(String date, Food original, Food food){
+        // Check for data redundancy first with inDB() or with primary key system
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(FOOD_LOG_DATE, date);
+        values.put(FOOD_NAME, food.getName());
+        values.put(FOOD_SUBTEXT, food.getSubText());
+        values.put(FOOD_SERVINGS, food.getServings());
+        values.put(FOOD_SERVINGS_QTY, food.getServingQuantity());
+        values.put(FOOD_SERVINGS_UNIT, food.getServingUnit());
+        values.put(FOOD_CALORIES, food.getCalories());
+
+        db.insert(TABLE_NAME, null, values);
+        db.close();
+    }
+
+    // DELETE -------------------------------------------------------------------------------------=
     // Remove food from log
     public boolean deleteFood(int delKeyID){
         SQLiteDatabase db = this.getWritableDatabase();
