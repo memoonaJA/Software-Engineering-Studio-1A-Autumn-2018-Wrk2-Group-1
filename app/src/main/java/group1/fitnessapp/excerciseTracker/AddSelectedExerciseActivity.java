@@ -19,11 +19,16 @@ public class AddSelectedExerciseActivity extends AppCompatActivity {
         exerciseName = (TextView) findViewById(R.id.selectedName);
         exerciseDesc = (TextView) findViewById(R.id.selectedDesc);
         exercise = new Exercise((String) getIntent().getSerializableExtra("exName"), (String) getIntent().getSerializableExtra("exDesc"));
+        //System.out.println(exercise.getName());
         exerciseName.setText(exercise.getName());
         exerciseDesc.setText(exercise.getDesc());
     }
 
     public void addExercise(View view) {
 
+    }
+
+    public void closeWindow(View view) {
+        finish();
     }
 }
