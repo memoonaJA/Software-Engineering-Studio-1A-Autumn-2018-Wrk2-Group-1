@@ -3,11 +3,9 @@ package group1.fitnessapp.dietTracker;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.security.Key;
 import java.util.ArrayList;
 
 public class DietDBHandler extends SQLiteOpenHelper{
@@ -53,8 +51,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    // Crud methods here
-
+    // CRUD METHODS HERE
     // CREATE --------------------------------------------------------------------------------------
     // Add a food to the db as new foods are added and return the foods primary key in the db
     public void foodLogAdd(String date, Food food){
@@ -133,4 +130,36 @@ public class DietDBHandler extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, FOOD_NAME + "=" + delKeyID, null) > 0;
     }
+
+    public void diagnostic(){
+        ArrayList<Food> log = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                Food food = new Food(
+                        cursor.getString(1),                        // Name
+                        cursor.getString(2),                        // Subtext
+                        Double.parseDouble(cursor.getString(3)),    // Servings
+                        Double.parseDouble(cursor.getString(4)),    // Servings qty
+                        cursor.getString(5),                        // Servings unit
+                        Double.parseDouble(cursor.getString(6))     // Calories
+                );
+                log.add(food);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        System.out.println("STARTING DB CONTENTS DUMP -------------------------------------------");
+        for (Food food : log){
+            System.out.println(food.toString());
+        }
+        System.out.println("END DB CONTENTS DUMP ------------------------------------------------");
+    }
+
+
 }

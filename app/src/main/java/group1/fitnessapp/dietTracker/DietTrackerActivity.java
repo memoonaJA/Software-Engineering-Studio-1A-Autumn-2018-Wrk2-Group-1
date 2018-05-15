@@ -108,7 +108,9 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
 
     private void getLog(String date){
         ArrayList<Food> toAdd = db.getLogDate(date);
-        foodArrayList.addAll(toAdd);
+        if (toAdd != null){
+            foodArrayList.addAll(toAdd);
+        }
     }
 
     // Common Functions
@@ -139,7 +141,7 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         foodArrayList.add(food);
         adapt.notifyDataSetChanged();
         updateCalories();
-        //db.foodLogAdd(df.format(c), food);
+        db.foodLogAdd(df.format(c), food);
     }
 
     // TODO update db with new food removed
