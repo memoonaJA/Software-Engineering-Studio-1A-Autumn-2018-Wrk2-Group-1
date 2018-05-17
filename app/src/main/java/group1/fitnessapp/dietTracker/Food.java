@@ -26,7 +26,7 @@ public class Food implements Serializable{
         this.calories = calories;
     }
 
-    // Necessary when constructing foods with reference to position in DB 
+    // Necessary when constructing foods with reference to position in DB
     public Food(int key_id, String name, String subText, double servings, double servingQuantity, String servingUnit, double calories) {
         this.keyID = key_id;
         this.name = name;
