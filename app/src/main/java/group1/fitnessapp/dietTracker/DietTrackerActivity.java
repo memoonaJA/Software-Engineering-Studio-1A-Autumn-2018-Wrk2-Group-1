@@ -99,18 +99,13 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         }
     }
 
-    // TODO will have to be removed when db is functioning
-    private void generateTestData() {
-        foodArrayList.add(new Food("Peach Rings", "JuiceFuls",1, 50, "g", 238));
-        foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
-
-    }
-
     private void getLog(String date){
         ArrayList<Food> toAdd = db.getLogDate(date);
         if (toAdd != null){
+            foodArrayList.clear();
             foodArrayList.addAll(toAdd);
         }
+
     }
 
     // Common Functions
@@ -136,15 +131,13 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         remainingProgressBar.setProgress(used, true);
     }
 
-    // TODO update the db with new food added
     private void addFood(Food food) {
-        foodArrayList.add(food);
+        db.foodLogAdd(df.format(c), food);
+        getLog(df.format(c));
         adapt.notifyDataSetChanged();
         updateCalories();
-        db.foodLogAdd(df.format(c), food);
     }
 
-    // TODO update db with new food removed
     private void removeFood (Food toDelete){
         Food foundDelete = null;
         for(Food f : foodArrayList){
@@ -157,9 +150,8 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
                 }
             }
         }
-        if(!foodArrayList.remove(foundDelete)){
-            System.out.println("Delete failed no match found");
-        }
+        db.deleteFood(foundDelete);
+        getLog(df.format(c));
         adapt.notifyDataSetChanged();
         updateCalories();
     }

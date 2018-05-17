@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class DietDBHandler extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "DietFeature.db";
     // Table name
     public static final String TABLE_NAME = "DietLog";
@@ -33,15 +33,15 @@ public class DietDBHandler extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + FOOD_KEY_ID + "INTEGER PRIMARY KEY,"
-                + FOOD_LOG_DATE + "TEXT,"
-                + FOOD_NAME + "TEXT,"
-                + FOOD_SUBTEXT + "TEXT,"
-                + FOOD_SERVINGS + "DOUBLE,"
-                + FOOD_SERVINGS_QTY + "DOUBLE,"
-                + FOOD_SERVINGS_UNIT + "TEXT,"
-                + FOOD_CALORIES + "DOUBLE " + ")";
+        String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
+                + FOOD_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + FOOD_LOG_DATE + " TEXT, "
+                + FOOD_NAME + " TEXT, "
+                + FOOD_SUBTEXT + " TEXT, "
+                + FOOD_SERVINGS + " DOUBLE, "
+                + FOOD_SERVINGS_QTY + " DOUBLE, "
+                + FOOD_SERVINGS_UNIT + " TEXT, "
+                + FOOD_CALORIES + " DOUBLE " + ")";
         db.execSQL(CREATE_TABLE);
     }
 
@@ -67,8 +67,6 @@ public class DietDBHandler extends SQLiteOpenHelper{
         values.put(FOOD_CALORIES, food.getCalories());
 
         db.insert(TABLE_NAME, null, values);
-
-        // TODO Fetch the auto assigned key id for the new food
         db.close();
     }
 
@@ -85,12 +83,13 @@ public class DietDBHandler extends SQLiteOpenHelper{
         if (cursor.moveToFirst()){
             do {
                 Food food = new Food(
-                        cursor.getString(1),                        // Name
-                        cursor.getString(2),                        // Subtext
-                        Double.parseDouble(cursor.getString(3)),    // Servings
-                        Double.parseDouble(cursor.getString(4)),    // Servings qty
-                        cursor.getString(5),                        // Servings unit
-                        Double.parseDouble(cursor.getString(6))     // Calories
+                        cursor.getInt(0),                           // Key ID
+                        cursor.getString(2),                        // Name
+                        cursor.getString(3),                        // Subtext
+                        Double.parseDouble(cursor.getString(4)),    // Servings
+                        Double.parseDouble(cursor.getString(5)),    // Servings qty
+                        cursor.getString(6),                        // Servings unit
+                        Double.parseDouble(cursor.getString(7))     // Calories
                 );
                 log.add(food);
             }while (cursor.moveToNext());
@@ -101,39 +100,9 @@ public class DietDBHandler extends SQLiteOpenHelper{
 
     // Return an array list of foods in the log by the passed in date
     public ArrayList<Food> getLogDate (String date){
-        return null;
-    }
-
-    // UPDATE --------------------------------------------------------------------------------------
-    // TODO Update an added food in the db
-    // Currently unused because of how the activity handles food updates with a destroy and add
-    void foodLogUpdate(String date, Food original, Food food){
-        // Check for data redundancy first with inDB() or with primary key system
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(FOOD_LOG_DATE, date);
-        values.put(FOOD_NAME, food.getName());
-        values.put(FOOD_SUBTEXT, food.getSubText());
-        values.put(FOOD_SERVINGS, food.getServings());
-        values.put(FOOD_SERVINGS_QTY, food.getServingQuantity());
-        values.put(FOOD_SERVINGS_UNIT, food.getServingUnit());
-        values.put(FOOD_CALORIES, food.getCalories());
-
-        db.insert(TABLE_NAME, null, values);
-        db.close();
-    }
-
-    // DELETE --------------------------------------------------------------------------------------
-    // Remove food from log
-    public boolean deleteFood(int delKeyID){
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, FOOD_NAME + "=" + delKeyID, null) > 0;
-    }
-
-    public void diagnostic(){
         ArrayList<Food> log = new ArrayList<>();
 
+        // TODO ADDRESS THIS BAD LOGIC WITH A BETTER SELECT STATEMENT
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -141,25 +110,31 @@ public class DietDBHandler extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()){
             do {
-                Food food = new Food(
-                        cursor.getString(1),                        // Name
-                        cursor.getString(2),                        // Subtext
-                        Double.parseDouble(cursor.getString(3)),    // Servings
-                        Double.parseDouble(cursor.getString(4)),    // Servings qty
-                        cursor.getString(5),                        // Servings unit
-                        Double.parseDouble(cursor.getString(6))     // Calories
-                );
-                log.add(food);
+                if(cursor.getString(1).equalsIgnoreCase(date)){
+                    Food food = new Food(
+                            cursor.getInt(0),                           // Key ID
+                            cursor.getString(2),                        // Name
+                            cursor.getString(3),                        // Subtext
+                            Double.parseDouble(cursor.getString(4)),    // Servings
+                            Double.parseDouble(cursor.getString(5)),    // Servings qty
+                            cursor.getString(6),                        // Servings unit
+                            Double.parseDouble(cursor.getString(7))     // Calories
+                    );
+                    log.add(food);
+                }
             }while (cursor.moveToNext());
         }
         cursor.close();
-
-        System.out.println("STARTING DB CONTENTS DUMP -------------------------------------------");
-        for (Food food : log){
-            System.out.println(food.toString());
-        }
-        System.out.println("END DB CONTENTS DUMP ------------------------------------------------");
+        return log;
     }
 
+    // UPDATE --------------------------------------------------------------------------------------
+    // Currently unused because of how the activity handles food updates with a destroy and add
 
+    // DELETE --------------------------------------------------------------------------------------
+    // Remove food from log
+    public boolean deleteFood(Food toDelete){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, FOOD_KEY_ID + " = " + toDelete.getKeyId(), null) > 0;
+    }
 }
