@@ -20,7 +20,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import group1.fitnessapp.R;
 
@@ -33,6 +36,13 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
     private FoodListAdapter adapt = null;
     private ArrayList<Food> foodArrayList = new ArrayList<>();
     private int goal = 0;
+
+    // DB elements
+    DietDBHandler db;
+
+    // Utility
+    private Date c = Calendar.getInstance().getTime();
+    private SimpleDateFormat df = new SimpleDateFormat("dd MMM YYYY");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +79,12 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
             }
         });
 
+        // Preparing database
+        db = new DietDBHandler(this);
+
         // Startup setup functions
-        generateTestData();
+        //generateTestData();
+        getLog(df.format(c));
         getPreferences();
         updateCalories();
     }
@@ -85,9 +99,12 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         }
     }
 
-    private void generateTestData() {
-        foodArrayList.add(new Food("Peach Rings", "JuiceFuls",1, 50, "g", 238));
-        foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
+    private void getLog(String date){
+        ArrayList<Food> toAdd = db.getLogDate(date);
+        if (toAdd != null){
+            foodArrayList.clear();
+            foodArrayList.addAll(toAdd);
+        }
 
     }
 
@@ -115,7 +132,8 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
     }
 
     private void addFood(Food food) {
-        foodArrayList.add(food);
+        db.foodLogAdd(df.format(c), food);
+        getLog(df.format(c));
         adapt.notifyDataSetChanged();
         updateCalories();
     }
@@ -132,9 +150,8 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
                 }
             }
         }
-        if(!foodArrayList.remove(foundDelete)){
-            System.out.println("Delete failed no match found");
-        }
+        db.deleteFood(foundDelete);
+        getLog(df.format(c));
         adapt.notifyDataSetChanged();
         updateCalories();
     }
