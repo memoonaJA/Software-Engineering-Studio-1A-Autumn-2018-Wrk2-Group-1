@@ -71,45 +71,16 @@ public class DietDBHandler extends SQLiteOpenHelper{
     }
 
     // READ ----------------------------------------------------------------------------------------
-    // Return an array list of all foods added
-    public ArrayList<Food> getLogAll(){
-        ArrayList<Food> log = new ArrayList<>();
-
-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()){
-            do {
-                Food food = new Food(
-                        cursor.getInt(0),                           // Key ID
-                        cursor.getString(2),                        // Name
-                        cursor.getString(3),                        // Subtext
-                        Double.parseDouble(cursor.getString(4)),    // Servings
-                        Double.parseDouble(cursor.getString(5)),    // Servings qty
-                        cursor.getString(6),                        // Servings unit
-                        Double.parseDouble(cursor.getString(7))     // Calories
-                );
-                log.add(food);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return log;
-    }
-
     // Return an array list of foods in the log by the passed in date
     public ArrayList<Food> getLogDate (String date){
         ArrayList<Food> log = new ArrayList<>();
-
-        // TODO ADDRESS THIS BAD LOGIC WITH A BETTER SELECT STATEMENT
-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
-
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE log_date = ?"
+                                    , new String[]{date});
 
         if (cursor.moveToFirst()){
             do {
+                // This is a bit of a redundant check since the select query should only return correct results for the date
                 if(cursor.getString(1).equalsIgnoreCase(date)){
                     Food food = new Food(
                             cursor.getInt(0),                           // Key ID
@@ -129,7 +100,8 @@ public class DietDBHandler extends SQLiteOpenHelper{
     }
 
     // UPDATE --------------------------------------------------------------------------------------
-    // Currently unused because of how the activity handles food updates with a destroy and add
+    // Currently unused because of how the activity handles food updates with a delete and add
+    // Not the best way to do it but it works so far
 
     // DELETE --------------------------------------------------------------------------------------
     // Remove food from log
