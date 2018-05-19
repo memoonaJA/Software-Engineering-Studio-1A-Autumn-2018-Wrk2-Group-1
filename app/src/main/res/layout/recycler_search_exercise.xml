@@ -15,23 +15,29 @@
             android:elevation="4dp"
             android:id="@+id/resultCard">
 
-            <TextView
-                android:id="@+id/apiExerciseName"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:text="Exercise Name"
-                android:layout_marginTop="10dp"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/apiExerciseDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Exercise Description"
-                android:layout_marginTop="50dp"
-                android:textSize="15dp"
-                android:maxLines="3"
-                android:paddingBottom="15dp"/>
+                <TextView
+                    android:id="@+id/apiExerciseName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:text="Exercise Name"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/apiExerciseDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Exercise Description"
+                    android:textSize="15dp"
+                    android:maxLines="5"
+                    android:paddingBottom="15dp"/>
+
+            </LinearLayout>
 
         </android.support.v7.widget.CardView>
 

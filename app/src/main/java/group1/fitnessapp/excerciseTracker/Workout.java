@@ -3,26 +3,41 @@ package group1.fitnessapp.excerciseTracker;
 import java.util.ArrayList;
 
 public class Workout {
-    private String workoutName;
-    private Exercise exercise;
-    private int repGoal;
-    //private ArrayList<Object> excercises = new ArrayList<>(); This will be implemented in the future!
 
-    public Workout(String workoutName, Exercise exercise, int repGoal){
-        this.workoutName = workoutName;
-        this.exercise = exercise;
-        this.repGoal = repGoal;
+    private String name;
+    private ArrayList<Exercise> exercises = new ArrayList<>();
+
+    public Workout(String name) {
+        this.name = name;
     }
 
-    public Exercise getExercise() {
-        return this.exercise;
-    }
-
-    public int getRepGoal() {
-        return this.repGoal;
+    public Workout(String name, ArrayList<Exercise> list) {
+        this.name = name;
+        this.exercises = list;
     }
 
     public String getName() {
-        return this.workoutName;
+        return this.name;
+    }
+
+    public ArrayList<Exercise> getExercises() {
+        return this.exercises;
+    }
+
+    public boolean hasExercise(String name) {
+        for(Exercise e: exercises) {
+            if(e.getName() == name) {
+              return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeExercise(Exercise exercise) {
+        for(Exercise e: exercises) {
+            if(e.getName() == exercise.getName()) {
+              exercises.remove(e);
+            }
+        }
     }
 }

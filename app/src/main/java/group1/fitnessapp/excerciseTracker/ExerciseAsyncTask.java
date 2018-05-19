@@ -66,9 +66,11 @@ public class ExerciseAsyncTask extends AsyncTask<String, Void, ArrayList<Exercis
                 //System.out.println(exerciseObject.toString());
                 JSONObject auxillaryObject = exerciseObject.getJSONObject("data");
                 String name = auxillaryObject.getString("name");
+                String category = auxillaryObject.getString("category");
                 String description = getDescription(name).getJSONArray("results").getJSONObject(0).getString("description").replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
                 //String description = exerciseObject.getString("description");
-                results.add(new Exercise(name, description));
+
+                results.add(new Exercise(name, description, category));
             }
             return results;
         }

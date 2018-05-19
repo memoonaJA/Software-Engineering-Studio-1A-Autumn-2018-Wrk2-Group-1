@@ -48,7 +48,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".excerciseTracker.ViewExercisesActivity" />
         <activity android:name=".excerciseTracker.AddExerciseActivity" />
-        <activity android:name=".excerciseTracker.AddSelectedExerciseActivity"></activity>
+        <activity android:name=".excerciseTracker.AddSelectedExerciseActivity" />
+        <activity android:name=".excerciseTracker.ViewSetsActivity" />
+        <activity android:name=".excerciseTracker.AddSetDialogBoxActivity" />
+        <activity android:name=".excerciseTracker.ViewSelectedSetActivity"></activity>
     </application>
 
 </manifest>

@@ -57,6 +57,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
                     Intent intent = new Intent(context, AddSelectedExerciseActivity.class);
                     intent.putExtra("exName", list.get(getAdapterPosition()).getName());
                     intent.putExtra("exDesc", list.get(getAdapterPosition()).getDesc());
+                    intent.putExtra("category", list.get(getAdapterPosition()).getCategory());
                     context.startActivity(intent);
                 }
             });
