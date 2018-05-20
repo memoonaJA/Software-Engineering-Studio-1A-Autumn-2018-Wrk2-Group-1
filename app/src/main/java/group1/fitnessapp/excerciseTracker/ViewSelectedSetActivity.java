@@ -44,13 +44,43 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
     }
 
     public void commitReps(View view) {
-        set.commitReps(Integer.parseInt(addRepsEt.getText().toString()));
-        setData();
+        try {
+            String getText = addRepsEt.getText().toString();
+            int num = Integer.parseInt(getText);
+            if(num <= 0) {
+                showDialogBox("Please enter a number greater than 0!");
+            } else {
+                set.commitReps(Integer.parseInt(getText));
+                setData();
+            }
+        } catch(NumberFormatException e) {
+            showDialogBox("Please enter a number greater than 0!");
+        }
+        //set.commitReps(Integer.parseInt(addRepsEt.getText().toString()));
+        //setData();
+    }
+
+    public void showDialogBox(String text) {
+        CustomDialogBoxActivity customDialog = new CustomDialogBoxActivity();
+        customDialog.setDialogText(text);
+        customDialog.show(getSupportFragmentManager(), "Error");
     }
 
     public void changeReps(View view) {
-        set.changeReps(Integer.parseInt(changeRepGoalEt.getText().toString()));
-        setData();
+        try {
+            String getText = changeRepGoalEt.getText().toString();
+            int num = Integer.parseInt(getText);
+            if(num <= 0) {
+                showDialogBox("Please enter a number greater than 0!");
+            } else {
+                set.changeReps(Integer.parseInt(changeRepGoalEt.getText().toString()));
+                setData();
+            }
+        } catch(NumberFormatException e) {
+            showDialogBox("Please enter a number greater than 0!");
+        }
+        //set.changeReps(Integer.parseInt(changeRepGoalEt.getText().toString()));
+        //setData();
     }
 
     public void closeWindow(View view) {

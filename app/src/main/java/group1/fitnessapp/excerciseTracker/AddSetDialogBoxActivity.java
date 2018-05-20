@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -34,13 +35,29 @@ public class AddSetDialogBoxActivity extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String reps = enterRepsEt.getText().toString();
-                        listener.sendText(reps);
+                        try {
+                            int num = Integer.parseInt(reps);
+                            if(num <= 0) {
+                                showDialogBox("Please enter a number greater than 0!");
+                            } else {
+                                listener.sendText(reps);
+                            }
+                        } catch(NumberFormatException e) {
+                            showDialogBox("Please enter a number greater than 0!");
+                        }
+                        //listener.sendText(reps);
                     }
                 });
 
         enterRepsEt = (EditText) view.findViewById(R.id.enterRepsEt);
 
         return builder.create();
+    }
+
+    public void showDialogBox(String text) {
+        CustomDialogBoxActivity customDialog = new CustomDialogBoxActivity();
+        customDialog.setDialogText(text);
+        customDialog.show(getFragmentManager(), "Error");
     }
 
     @Override
