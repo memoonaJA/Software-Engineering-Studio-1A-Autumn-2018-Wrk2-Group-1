@@ -64,7 +64,8 @@ public class Set implements Parcelable {
     }
 
     public void reposition() {
-        this.setNo = this.exercise.getSets().indexOf(this);
+        this.setNo = this.exercise.getSets().indexOf(this) + 1;
+        helper.updateSetNumber(this.id, this.setNo);
     }
 
     public void commitReps(int reps) {

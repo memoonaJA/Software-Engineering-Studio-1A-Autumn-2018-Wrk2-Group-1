@@ -14,7 +14,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/setNoTxt"
@@ -36,6 +41,23 @@
                     android:layout_height="wrap_content"
                     android:text="Last Modified: "
                     android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/repeatIv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_replay_black_24dp" />
+
+            <ImageView
+                android:id="@+id/deleteSetIv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_clear_black_24dp" />
 
         </LinearLayout>
 

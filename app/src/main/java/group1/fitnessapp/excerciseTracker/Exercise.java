@@ -73,9 +73,12 @@ public class Exercise implements Parcelable {
     }
 
     public void removeSet(Set set) {
-        sets.remove(set);
+        //sets.remove(set);
+        set.removeSet();
         for(Set s: sets) {
-            s.reposition();
+            if(s != null) {
+                s.reposition();
+            }
         }
     }
 

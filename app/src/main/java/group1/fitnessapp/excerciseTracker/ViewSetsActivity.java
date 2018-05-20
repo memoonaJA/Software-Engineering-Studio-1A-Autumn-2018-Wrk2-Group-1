@@ -59,6 +59,7 @@ public class ViewSetsActivity extends AppCompatActivity implements AddSetDialogB
             list.clear();
             while(cursor.moveToNext()) {
                 Set set = new Set(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getInt(3), this.exercise, new Date(cursor.getLong(4)));
+                set.setContext(this);
                 exercise.addFullSet(set);
             }
         }

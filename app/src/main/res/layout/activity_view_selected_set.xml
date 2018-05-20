@@ -143,7 +143,9 @@
         android:layout_height="wrap_content"
         android:text="Close"
         android:textSize="18sp"
-        android:onClick="closeWindow"/>
+        android:onClick="closeWindow"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
 
 
 </LinearLayout>

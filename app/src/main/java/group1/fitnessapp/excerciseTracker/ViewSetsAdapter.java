@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -57,12 +58,34 @@ public class ViewSetsAdapter extends RecyclerView.Adapter<ViewSetsAdapter.ViewSe
 
         TextView setNoTxt, repGoalTxt, lastModifiedTxt;
         CardView setCard;
+        ImageView repeatIv, deleteSetIv;
 
         public ViewSetsViewHolder(View view) {
             super(view);
             setNoTxt = (TextView) view.findViewById(R.id.setNoTxt);
             repGoalTxt = (TextView) view.findViewById(R.id.repGoalTxt);
             lastModifiedTxt = (TextView) view.findViewById(R.id.lastModifiedTxt);
+            repeatIv = (ImageView) view.findViewById(R.id.repeatIv);
+            repeatIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Set set = list.get(getAdapterPosition());
+                    //set.setContext(context);
+                    set.changeReps(set.getRepGoal());
+                    notifyDataSetChanged();
+                }
+            });
+            deleteSetIv = (ImageView) view.findViewById(R.id.deleteSetIv);
+            deleteSetIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Set set = list.get(getAdapterPosition());
+                    //set.setContext(context);
+                    helper.deleteSet(set.getId());
+                    set.getExercise().removeSet(set);
+                    notifyDataSetChanged();
+                }
+            });
             setCard = (CardView) view.findViewById(R.id.setCard);
             setCard.setOnClickListener(new View.OnClickListener() {
                 @Override
