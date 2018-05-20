@@ -36,6 +36,7 @@ public class ViewSetsActivity extends AppCompatActivity implements AddSetDialogB
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        exercise.setContext(this);
         reps = exercise.getTotalRepsDone() + "";
         totalRepsTxt = findViewById(R.id.totalRepsTxt);
         totalRepsTxt.setText(reps);

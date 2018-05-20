@@ -30,6 +30,8 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
         changeRepGoalEt = (EditText) findViewById(R.id.changeRepGoalEt);
         setData();
         set.setExercise(exercise);
+        set.setContext(this);
+        exercise.setContext(this);
     }
 
     public void setData() {
@@ -42,15 +44,17 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
     }
 
     public void commitReps(View view) {
-
+        set.commitReps(Integer.parseInt(addRepsEt.getText().toString()));
+        setData();
     }
 
     public void changeReps(View view) {
-
+        set.changeReps(Integer.parseInt(changeRepGoalEt.getText().toString()));
+        setData();
     }
 
     public void closeWindow(View view) {
-
+        finish();
     }
 
     @Override

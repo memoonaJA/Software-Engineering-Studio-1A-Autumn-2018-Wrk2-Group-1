@@ -1,5 +1,7 @@
 package group1.fitnessapp.excerciseTracker;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,6 +16,8 @@ public class Exercise implements Parcelable {
     private String category;
     private ArrayList<Set> sets = new ArrayList<>();
     private int totalRepsDone = 0;
+    private Context context;
+    private ExerciseTrackerDatabaseHelper helper;
 
     public Exercise(Parcel parcel) {
         String data[] = new String[5];
@@ -55,7 +59,10 @@ public class Exercise implements Parcelable {
        this.category = category;
     }
 
-    public void addReps(int reps) { totalRepsDone = totalRepsDone + reps; }
+    public void addReps(int reps) {
+        totalRepsDone = totalRepsDone + reps;
+        helper.updateTotalReps(this.id, this.totalRepsDone);
+    }
 
     public void addSet(int repGoal) {
         sets.add(new Set(sets.size() + 1, repGoal, this));
@@ -63,7 +70,6 @@ public class Exercise implements Parcelable {
 
     public void addFullSet(Set set) {
         sets.add(set);
-        this.totalRepsDone = this.totalRepsDone + (set.getRepGoal() - set.getRepsRemaining());
     }
 
     public void removeSet(Set set) {
@@ -75,7 +81,12 @@ public class Exercise implements Parcelable {
 
     public int getId() { return this.id; }
 
-    public int getTotalRepsDone() {return this.totalRepsDone; }
+    public int getTotalRepsDone() {
+        Cursor cursor = helper.readExerciseById(this.id);
+        cursor.moveToNext();
+        this.totalRepsDone = cursor.getInt(4);
+        return this.totalRepsDone;
+    }
 
     public String getCategory() { return this.category; }
 
@@ -87,6 +98,11 @@ public class Exercise implements Parcelable {
 
     public String getDesc() {
         return this.description;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+        this.helper = new ExerciseTrackerDatabaseHelper(this.context);
     }
 
     @Override

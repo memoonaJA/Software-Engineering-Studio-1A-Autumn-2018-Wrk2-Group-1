@@ -1,5 +1,7 @@
 package group1.fitnessapp.excerciseTracker;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,6 +17,8 @@ public class Set implements Parcelable {
     private int repsRemaining;
     private Exercise exercise;
     private Date lastModified;
+    private Context context;
+    private ExerciseTrackerDatabaseHelper helper;
 
     public Set(Parcel parcel) {
         String data[] = new String[5];
@@ -66,16 +70,21 @@ public class Set implements Parcelable {
     public void commitReps(int reps) {
         if(reps > repsRemaining) {
             int difference = reps - repsRemaining;
+            this.exercise.addReps(repsRemaining);
             this.repsRemaining = 0;
-            this.exercise.addReps(reps);
+            //this.exercise.addReps(reps);
+            helper.updateSetRepsRemaining(this.id, repsRemaining);
             if(getNextSet() != null) {
                 this.getNextSet().commitReps(difference);
             }
         } else {
             this.repsRemaining = this.repsRemaining - reps;
             this.exercise.addReps(reps);
+            //this.exercise.addReps(reps);
+            helper.updateSetRepsRemaining(this.id, repsRemaining);
         }
         this.lastModified = getCurrentDate();
+        helper.updateLastDate(this.id, this.lastModified);
     }
 
     public Date getCurrentDate() {
@@ -87,6 +96,8 @@ public class Set implements Parcelable {
     public void changeReps(int repGoal) {
         this.repGoal = repGoal;
         this.repsRemaining = repGoal;
+        helper.updateSetRepGoal(this.id, this.repGoal);
+        helper.updateSetRepsRemaining(this.id, this.repsRemaining);
     }
 
     public void refreshSet() {
@@ -105,6 +116,11 @@ public class Set implements Parcelable {
         return 0;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+        helper = new ExerciseTrackerDatabaseHelper(this.context);
+    }
+
     public void setExercise(Exercise exercise) { this.exercise = exercise; }
 
     public Exercise getExercise() { return this.exercise; }
@@ -120,7 +136,12 @@ public class Set implements Parcelable {
     }
 
     public Set getNextSet() {
-        return this.exercise.getSets().get(getThisIndex(this) + 1);
+        Cursor cursor = helper.readSetBySetNo(this.setNo + 1, this.exercise.getId());
+        cursor.moveToNext();
+        Set set = new Set(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getInt(3), this.exercise,
+                new Date(cursor.getLong(4)));
+        set.setContext(this.context);
+        return set;
     }
 
     public Date getLastModified() { return this.lastModified; }

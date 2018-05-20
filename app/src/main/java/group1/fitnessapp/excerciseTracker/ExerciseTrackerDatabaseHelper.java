@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Date;
+
 public class ExerciseTrackerDatabaseHelper extends SQLiteOpenHelper {
 
     //Stores Database name
@@ -110,6 +112,18 @@ public class ExerciseTrackerDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor readExerciseById(int exID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_1 + " where exID = " + exID + ";", null);
+        return cursor;
+    }
+
+    public Cursor readSetBySetNo(int setNo, int exID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_2 + " where setNo = " + setNo + " and exID = " + exID,null);
+        return cursor;
+    }
+
     public Cursor readSetsFromExercise(int exID) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + TABLE_2 + " where exID = " + exID + ";", null);
@@ -130,12 +144,19 @@ public class ExerciseTrackerDatabaseHelper extends SQLiteOpenHelper {
 
     public void updateSetRepGoal(int id, int repGoal) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("update " + TABLE_2 + " set repGoal = " + repGoal + " where setID = " + repGoal + ";");
+        db.execSQL("update " + TABLE_2 + " set repGoal = " + repGoal + " where setID = " + id + ";");
     }
 
     public void updateTotalReps(int id, int totalReps) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("update " + TABLE_1 + " set Total_Reps = " + totalReps + " where exID = " + id + ";");
+    }
+
+    public void updateLastDate(int id, Date date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Date nominatedDate = date;
+        long time = date.getTime();
+        db.execSQL("update " + TABLE_2 + " set last_Date = " + time + " where setID = " + id + ";");
     }
 
     //Delete Statements
