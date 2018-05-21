@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import group1.fitnessapp.dietTracker.DietDBHandler;
 import group1.fitnessapp.dietTracker.DietTrackerActivity;
+import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
 import group1.fitnessapp.dietTracker.Food;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
 
@@ -162,7 +163,8 @@ public class MainMenuActivity extends AppCompatActivity
         if (id == R.id.nav_dietTracker) {
             startDietTracker();
         } else if (id == R.id.nav_excerciseTracker) {
-
+            Intent intent = new Intent(this, ExerciseTrackerActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_stepTracker) {
             Intent intent = new Intent(this, StepCounterActivity.class);
             startActivity(intent);

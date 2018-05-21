@@ -9,11 +9,9 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_main_menu"
+        layout="@layout/app_bar_excercise_tracker"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -21,7 +19,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main_menu"
-        app:menu="@menu/activity_main_menu_drawer" />
+        app:headerLayout="@layout/nav_header_excercise_tracker"
+        app:menu="@menu/activity_excercise_tracker_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
+
+

@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import group1.fitnessapp.R;
+import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
 
 public class DietTrackerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // All GUI elements of the activity
@@ -307,7 +308,8 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         if (id == R.id.nav_dietTracker) {
             // A new instance of this activity shouldn't be made again
         } else if (id == R.id.nav_excerciseTracker) {
-
+            Intent intent = new Intent(this, ExerciseTrackerActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_stepTracker) {
 
         }
