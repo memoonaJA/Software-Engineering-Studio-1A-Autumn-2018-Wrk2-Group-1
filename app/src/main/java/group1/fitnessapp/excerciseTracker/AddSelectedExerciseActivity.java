@@ -28,6 +28,7 @@ public class AddSelectedExerciseActivity extends AppCompatActivity {
         exerciseName.setText(exercise.getName());
         exerciseDesc.setText(exercise.getDesc());
         helper = new ExerciseTrackerDatabaseHelper(this);
+        setTitle(exercise.getName());
     }
 
     public void addExercise(View view) {
