@@ -30,6 +30,7 @@ import group1.fitnessapp.dietTracker.DietDBHandler;
 import group1.fitnessapp.dietTracker.DietTrackerActivity;
 import group1.fitnessapp.dietTracker.Food;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
+import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -77,6 +78,8 @@ public class MainMenuActivity extends AppCompatActivity
 
     // Launch activities via cards
     private void startDietTracker() {
+        // For testing
+        // Intent intent = new Intent(this, WeightTrackerActivity.class);
         Intent intent = new Intent(this, DietTrackerActivity.class);
         startActivity(intent);
     }

@@ -35,13 +35,13 @@ public class FoodListAdapter extends ArrayAdapter<Food>{
         View rowView = inflater.inflate(R.layout.diet_list_row, null, true);
 
         // Getting GUI elements
-        TextView foodName = (TextView) rowView.findViewById(R.id.txt_food_name);
-        TextView foodSubTxt = (TextView) rowView.findViewById(R.id.txt_food_subtxt);
-        TextView foodCalories = (TextView) rowView.findViewById(R.id.txt_food_calories);
+        TextView foodName = rowView.findViewById(R.id.txt_food_name);
+        TextView foodSubTxt = rowView.findViewById(R.id.txt_food_subtxt);
+        TextView foodCalories = rowView.findViewById(R.id.txt_food_calories);
 
         // Setting text
         foodName.setText(f.getName());
-        String servingUnit = null;
+        String servingUnit;
         if(f.getServingUnit().length() > 7){
             servingUnit = f.getServingUnit().substring(0,5) + "...";
         }else {

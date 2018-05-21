@@ -34,7 +34,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
-                + FOOD_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + FOOD_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FOOD_LOG_DATE + " TEXT, "
                 + FOOD_NAME + " TEXT, "
                 + FOOD_SUBTEXT + " TEXT, "
