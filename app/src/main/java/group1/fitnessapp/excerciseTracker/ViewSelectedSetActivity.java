@@ -3,6 +3,7 @@ package group1.fitnessapp.excerciseTracker;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
     private TextView repGoalSetTxt, repRemainingSetTxt, setProgressTxt;
     private String repGoal, repsRemaining, progress;
     private EditText addRepsEt, changeRepGoalEt;
+    private Button commitRepsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
         setProgressTxt = (TextView) findViewById(R.id.setProgressTxt);
         addRepsEt = (EditText) findViewById(R.id.addRepsEt);
         changeRepGoalEt = (EditText) findViewById(R.id.changeRepGoalEt);
+        commitRepsBtn = (Button) findViewById(R.id.commitRepsBtn);
         setData();
         set.setExercise(exercise);
         set.setContext(this);
@@ -41,6 +44,15 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
         repGoalSetTxt.setText(repGoal);
         repRemainingSetTxt.setText(repsRemaining);
         setProgressTxt.setText(progress);
+        if(set.getRepsRemaining() == 0) {
+            showDialogBox("This set has already been completed! If you wish to commit reps in this set please change the Rep Goal or" +
+                    " go back and press the repeat button to refresh the set. Otherwise waiting a full day will refresh this set automatically.");
+            commitRepsBtn.setClickable(false);
+            commitRepsBtn.setText("Set Completed!");
+        } else {
+            commitRepsBtn.setClickable(true);
+            commitRepsBtn.setText("Commit Reps");
+        }
     }
 
     public void commitReps(View view) {

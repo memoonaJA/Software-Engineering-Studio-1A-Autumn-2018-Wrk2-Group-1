@@ -19,6 +19,7 @@ public class Set implements Parcelable {
     private Date lastModified;
     private Context context;
     private ExerciseTrackerDatabaseHelper helper;
+    private boolean recentlyDone;
 
     public Set(Parcel parcel) {
         String data[] = new String[5];
@@ -37,6 +38,12 @@ public class Set implements Parcelable {
         this.repsRemaining = repsRemaining;
         this.exercise = exercise;
         this.lastModified = lastModified;
+        Date currentDate = new Date();
+        if(currentDate.getTime() - lastModified.getTime() <= 86400000) {
+            this.recentlyDone = true;
+        } else {
+            this.recentlyDone = false;
+        }
     }
 
     public Set(int setNo, int repGoal, int repsRemaining, Exercise exercise, Date lastModified) {
@@ -125,6 +132,8 @@ public class Set implements Parcelable {
     public void setExercise(Exercise exercise) { this.exercise = exercise; }
 
     public Exercise getExercise() { return this.exercise; }
+
+    public boolean getRecentlyDone() { return this.recentlyDone; }
 
     public int getId() { return this.id; }
 

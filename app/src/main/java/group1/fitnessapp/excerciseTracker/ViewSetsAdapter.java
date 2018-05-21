@@ -2,6 +2,7 @@ package group1.fitnessapp.excerciseTracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,11 @@ public class ViewSetsAdapter extends RecyclerView.Adapter<ViewSetsAdapter.ViewSe
         holder.repGoalTxt.setText(repGoal);
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         holder.lastModifiedTxt.setText(dateFormat.format(set.getLastModified()));
+        if(!set.getRecentlyDone()) {
+            holder.lastModifiedTxt.setTextColor(Color.RED);
+        } else {
+            holder.lastModifiedTxt.setTextColor(Color.BLACK);
+        }
     }
 
     @Override
