@@ -91,6 +91,8 @@ public class Exercise implements Parcelable {
         return this.totalRepsDone;
     }
 
+    public void setTotalRepsDone(int totalRepsDone) { this.totalRepsDone =  totalRepsDone; }
+
     public String getCategory() { return this.category; }
 
     public ArrayList<Set> getSets() { return this.sets; }

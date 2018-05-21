@@ -46,7 +46,7 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
         setProgressTxt.setText(progress);
         if(set.getRepsRemaining() == 0) {
             showDialogBox("This set has already been completed! If you wish to commit reps in this set please change the Rep Goal or" +
-                    " go back and press the repeat button to refresh the set. Otherwise waiting a full day will refresh this set automatically.");
+                    " go back and press the repeat button to refresh the set. Otherwise waiting a full day will refresh this set automatically.", "Notice");
             commitRepsBtn.setClickable(false);
             commitRepsBtn.setText("Set Completed!");
         } else {
@@ -72,10 +72,18 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
         //setData();
     }
 
-    public void showDialogBox(String text) {
+    public void showDialogBox(String message) {
         CustomDialogBoxActivity customDialog = new CustomDialogBoxActivity();
-        customDialog.setDialogText(text);
+        customDialog.setDialogText(message);
+        customDialog.setCustomTitle("Error");
         customDialog.show(getSupportFragmentManager(), "Error");
+    }
+
+    public void showDialogBox(String message, String title) {
+        CustomDialogBoxActivity customDialog = new CustomDialogBoxActivity();
+        customDialog.setDialogText(message);
+        customDialog.setCustomTitle(title);
+        customDialog.show(getSupportFragmentManager(), title);
     }
 
     public void changeReps(View view) {

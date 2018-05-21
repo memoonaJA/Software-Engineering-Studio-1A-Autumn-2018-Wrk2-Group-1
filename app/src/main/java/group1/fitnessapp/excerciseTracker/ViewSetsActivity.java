@@ -65,6 +65,14 @@ public class ViewSetsActivity extends AppCompatActivity implements AddSetDialogB
         }
     }
 
+    public void resetTotalRepsDone(View view) {
+        helper.updateTotalReps(this.exercise.getId(), 0);
+        this.exercise.setTotalRepsDone(0);
+        setData();
+        reps = exercise.getTotalRepsDone() + "";
+        totalRepsTxt.setText(reps);
+    }
+
     public void openAddSetDialog(View view) {
         AddSetDialogBoxActivity dialog = new AddSetDialogBoxActivity();
         dialog.show(getSupportFragmentManager(), "Add Set");

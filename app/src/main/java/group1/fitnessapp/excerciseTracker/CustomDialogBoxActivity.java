@@ -16,13 +16,14 @@ public class CustomDialogBoxActivity extends AppCompatDialogFragment {
 
     private TextView customTxt;
     private String customMessage;
+    private String customTitle;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.activity_custom_dialog_box, null);
-        builder.setView(view).setTitle("Error").setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle(customTitle).setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -38,6 +39,8 @@ public class CustomDialogBoxActivity extends AppCompatDialogFragment {
     public void setDialogText(String text) {
         customMessage = text;
     }
+
+    public void setCustomTitle(String text) { customTitle = text; }
 
 
 }
