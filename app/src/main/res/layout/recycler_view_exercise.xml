@@ -53,7 +53,7 @@
                 android:id="@+id/deleteIv"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="35dp"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/baseline_clear_black_24dp"/>
 
             </LinearLayout>

@@ -1,6 +1,10 @@
 package group1.fitnessapp.excerciseTracker;
 
+import android.app.FragmentManager;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 public class ExerciseAsyncTask extends AsyncTask<String, Void, ArrayList<Exercise>> {
+
     @Override
     protected ArrayList<Exercise> doInBackground(String... search) {
         try {
@@ -26,6 +31,8 @@ public class ExerciseAsyncTask extends AsyncTask<String, Void, ArrayList<Exercis
             return null;
         }
     }
+
+
 
     private class ExerciseAPI {
         private ArrayList<Exercise> search(String query) throws IOException, JSONException {

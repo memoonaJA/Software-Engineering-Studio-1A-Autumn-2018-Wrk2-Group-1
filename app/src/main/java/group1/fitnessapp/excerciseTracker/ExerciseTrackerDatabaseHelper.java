@@ -130,6 +130,12 @@ public class ExerciseTrackerDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor readExerciseByName(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select Name from " + TABLE_1 + " where name = " + "'" + name + "'" + ";", null);
+        return cursor;
+    }
+
     //Update Statements
 
     public void updateSetRepsRemaining(int id, int repsRemaining) {

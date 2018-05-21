@@ -1,6 +1,7 @@
 package group1.fitnessapp.excerciseTracker;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,21 +31,33 @@ public class AddSelectedExerciseActivity extends AppCompatActivity {
     }
 
     public void addExercise(View view) {
-        String category = exercise.getCategory();
-        helper.insertNewExercise(exercise.getName(), exercise.getDesc(), category);
-        Intent intent = new Intent(AddSelectedExerciseActivity.this, ViewExercisesActivity.class);
-        switch(category) {
-            case "Chest": intent.putExtra("reqCode", 0); break;
-            case "Abs": intent.putExtra("reqCode", 0); break;
-            case "Arms": intent.putExtra("reqCode", 1); break;
-            case "Legs": intent.putExtra("reqCode", 2); break;
-            case "Calves": intent.putExtra("reqCode", 2); break;
-            case "Back": intent.putExtra("reqCode", 3); break;
-            case "Shoulders": intent.putExtra("reqCode", 4); break;
-            default: System.out.println("Unable to ascertain category!"); System.out.println(category);
+        if(!exerciseExists()) {
+            String category = exercise.getCategory();
+            helper.insertNewExercise(exercise.getName(), exercise.getDesc(), category);
+            Intent intent = new Intent(AddSelectedExerciseActivity.this, ViewExercisesActivity.class);
+            switch(category) {
+                case "Chest": intent.putExtra("reqCode", 0); break;
+                case "Abs": intent.putExtra("reqCode", 0); break;
+                case "Arms": intent.putExtra("reqCode", 1); break;
+                case "Legs": intent.putExtra("reqCode", 2); break;
+                case "Calves": intent.putExtra("reqCode", 2); break;
+                case "Back": intent.putExtra("reqCode", 3); break;
+                case "Shoulders": intent.putExtra("reqCode", 4); break;
+                default: System.out.println("Unable to ascertain category!"); System.out.println(category);
+            }
+            helper.close();
+            startActivity(intent);
+        } else {
+            CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+            dialog.setCustomTitle("Notice");
+            dialog.setDialogText("This Exercise Already Exists!");
+            dialog.show(getSupportFragmentManager(), "Notice");
         }
-        helper.close();
-        startActivity(intent);
+    }
+
+    public boolean exerciseExists() {
+        Cursor cursor = helper.readExerciseByName(exercise.getName());
+        return cursor.getCount() > 0;
     }
 
     public boolean hasValidText(String repText) {
