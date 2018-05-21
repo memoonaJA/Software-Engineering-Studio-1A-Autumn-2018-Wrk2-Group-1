@@ -42,7 +42,7 @@ public class DietAddFoodActivity extends AppCompatActivity {
                     searchView.clearFocus();
                     results.clear();
                     results.addAll(asyncTask.get());
-                } catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException | NullPointerException e) {
                     e.printStackTrace();
                 }
                 adapt.notifyDataSetChanged();

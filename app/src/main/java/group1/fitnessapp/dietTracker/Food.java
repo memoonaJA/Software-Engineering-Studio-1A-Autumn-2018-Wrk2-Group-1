@@ -1,8 +1,5 @@
 package group1.fitnessapp.dietTracker;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 
 /**
@@ -10,6 +7,7 @@ import java.io.Serializable;
  */
 
 public class Food implements Serializable{
+    private int keyID;
     private String name;
     private String subText;
     private double servings;
@@ -19,6 +17,18 @@ public class Food implements Serializable{
 
     // Constructors
     public Food(String name, String subText, double servings, double servingQuantity, String servingUnit, double calories) {
+        this.keyID = 0;
+        this.name = name;
+        this.subText = subText;
+        this.servings = servings;
+        this.servingQuantity = servingQuantity;
+        this.servingUnit = servingUnit;
+        this.calories = calories;
+    }
+
+    // Necessary when constructing foods with reference to position in DB
+    public Food(int key_id, String name, String subText, double servings, double servingQuantity, String servingUnit, double calories) {
+        this.keyID = key_id;
         this.name = name;
         this.subText = subText;
         this.servings = servings;
@@ -28,6 +38,7 @@ public class Food implements Serializable{
     }
 
     public Food(Food food){
+        this.keyID = food.keyID;
         this.name = food.getName();
         this.subText = food.getSubText();
         this.servings = food.servings;
@@ -36,8 +47,10 @@ public class Food implements Serializable{
         this.calories = food.calories;
     }
 
+    public int getKeyId() {
+        return keyID;
+    }
 
-    // Getters
     public String getName() {
         return name;
     }
@@ -66,12 +79,10 @@ public class Food implements Serializable{
         return servingUnit;
     }
 
-    // Setters
     public Food editServings(double servings){
         this.servings = servings;
         return this;
     }
-
 
     @Override
     public String toString(){
