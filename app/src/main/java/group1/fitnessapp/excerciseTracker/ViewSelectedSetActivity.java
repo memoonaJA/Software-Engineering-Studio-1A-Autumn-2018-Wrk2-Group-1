@@ -47,7 +47,7 @@ public class ViewSelectedSetActivity extends AppCompatActivity {
         setProgressTxt.setText(progress);
         if(set.getRepsRemaining() == 0) {
             showDialogBox("This set has already been completed! If you wish to commit reps in this set please change the Rep Goal or" +
-                    " go back and press the repeat button to refresh the set.", "Notice");
+                    " go back and press the repeat button to refresh the set. Otherwise this set will automatically be reset the next day.", "Notice");
             commitRepsBtn.setClickable(false);
             commitRepsBtn.setText("Set Completed!");
         } else {

@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -74,10 +75,11 @@ public class ExerciseAsyncTask extends AsyncTask<String, Void, ArrayList<Exercis
                 JSONObject auxillaryObject = exerciseObject.getJSONObject("data");
                 String name = auxillaryObject.getString("name");
                 String category = auxillaryObject.getString("category");
-                String description = getDescription(name).getJSONArray("results").getJSONObject(0).getString("description").replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
+                //String description = getDescription(name).getJSONArray("results").getJSONObject(0).getString("description").replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
                 //String description = exerciseObject.getString("description");
-
-                results.add(new Exercise(name, description, category));
+                //results.add(new Exercise(name, description, category));
+                //results.add(new Exercise(name));
+                results.add(new Exercise(name, category));
             }
             return results;
         }

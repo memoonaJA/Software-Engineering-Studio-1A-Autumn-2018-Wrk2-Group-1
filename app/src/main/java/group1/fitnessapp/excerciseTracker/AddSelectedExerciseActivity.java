@@ -1,7 +1,10 @@
 package group1.fitnessapp.excerciseTracker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,8 +25,19 @@ public class AddSelectedExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_selected_exercise);
         exerciseName = (TextView) findViewById(R.id.selectedName);
         exerciseDesc = (TextView) findViewById(R.id.selectedDesc);
-        exercise = new Exercise((String) getIntent().getSerializableExtra("exName"), (String) getIntent().getSerializableExtra("exDesc")
-        , (String) getIntent().getSerializableExtra("category"));
+        String name = (String) getIntent().getSerializableExtra("exName");
+        AsyncTask<String, Void, String> task = new AuxillaryAsyncTask().execute(name);
+        String description = "";
+        if(isNetworkConnected()) {
+            try {
+                description = task.get();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            showDialogBox("No Internet Connection Detected!");
+        }
+        exercise = new Exercise(name, description, (String) getIntent().getSerializableExtra("category"));
         //System.out.println(exercise.getName());
         exerciseName.setText(exercise.getName());
         exerciseDesc.setText(exercise.getDesc());
@@ -73,4 +87,17 @@ public class AddSelectedExerciseActivity extends AppCompatActivity {
     public void closeWindow(View view) {
         finish();
     }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void showDialogBox(String message) {
+        CustomDialogBoxActivity customDialog = new CustomDialogBoxActivity();
+        customDialog.setDialogText(message);
+        customDialog.setCustomTitle("Error");
+        customDialog.show(getSupportFragmentManager(), "Error");
+    }
+
 }

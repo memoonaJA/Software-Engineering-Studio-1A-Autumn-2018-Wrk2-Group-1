@@ -29,11 +29,11 @@
                     android:layout_marginTop="10dp"/>
 
                 <TextView
-                    android:id="@+id/apiExerciseDescription"
+                    android:id="@+id/apiExerciseCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Exercise Description"
-                    android:textSize="15dp"
+                    android:textSize="16sp"
                     android:maxLines="5"
                     android:paddingBottom="15dp"/>
 
