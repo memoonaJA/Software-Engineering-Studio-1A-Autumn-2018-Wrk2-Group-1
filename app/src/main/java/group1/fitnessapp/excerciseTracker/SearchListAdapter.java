@@ -34,7 +34,8 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     public void onBindViewHolder(SearchListAdapter.SearchListViewHolder holder, int position) {
         Exercise exercise = list.get(position);
         holder.exerciseName.setText(exercise.getName());
-        holder.exerciseDescription.setText(exercise.getDesc());
+        //holder.exerciseDescription.setText(exercise.getDesc());
+        holder.exerciseCategory.setText("Category: " + exercise.getCategory());
     }
 
     @Override
@@ -43,20 +44,20 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     }
 
     class SearchListViewHolder extends RecyclerView.ViewHolder {
-        TextView exerciseName, exerciseDescription;
+        TextView exerciseName, exerciseCategory;
         CardView cardView;
 
         public SearchListViewHolder(View view) {
             super(view);
             exerciseName = (TextView) view.findViewById(R.id.apiExerciseName);
-            exerciseDescription = (TextView) view.findViewById(R.id.apiExerciseDescription);
+            exerciseCategory = (TextView) view.findViewById(R.id.apiExerciseCategory);
             cardView = (CardView) view.findViewById(R.id.resultCard);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, AddSelectedExerciseActivity.class);
                     intent.putExtra("exName", list.get(getAdapterPosition()).getName());
-                    intent.putExtra("exDesc", list.get(getAdapterPosition()).getDesc());
+                    //intent.putExtra("exDesc", list.get(getAdapterPosition()).getDesc());
                     intent.putExtra("category", list.get(getAdapterPosition()).getCategory());
                     context.startActivity(intent);
                 }

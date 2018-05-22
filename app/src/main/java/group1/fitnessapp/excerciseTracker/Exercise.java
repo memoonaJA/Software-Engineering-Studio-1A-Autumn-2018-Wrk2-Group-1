@@ -33,10 +33,17 @@ public class Exercise implements Parcelable {
         this.name = name;
     }
 
+    public Exercise(String name, String category) {
+        this.name = name;
+        this.category = category;
+    }
+
+    /**
     public Exercise(String name, String description) {
         this.name = name;
         this.description = description;
     }
+     **/
 
     public Exercise(String name, String description, String category) {
         this.name = name;

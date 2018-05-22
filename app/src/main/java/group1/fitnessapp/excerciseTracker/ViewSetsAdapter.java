@@ -39,6 +39,13 @@ public class ViewSetsAdapter extends RecyclerView.Adapter<ViewSetsAdapter.ViewSe
     @Override
     public void onBindViewHolder(ViewSetsAdapter.ViewSetsViewHolder holder, int position) {
         Set set = list.get(position);
+        if(!set.getRecentlyDone()) {
+            holder.lastModifiedTxt.setTextColor(Color.RED);
+            set.refreshSet();
+            helper.updateSetRepsRemaining(set.getId(), set.getRepsRemaining());
+        } else {
+            holder.lastModifiedTxt.setTextColor(Color.BLACK);
+        }
         int difference = set.getRepGoal() - set.getRepsRemaining();
         String setNo = "Set " + set.getSetNumber();
         String repGoal = "Reps Completed: " + difference + "/" + set.getRepGoal();
@@ -46,11 +53,6 @@ public class ViewSetsAdapter extends RecyclerView.Adapter<ViewSetsAdapter.ViewSe
         holder.repGoalTxt.setText(repGoal);
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         holder.lastModifiedTxt.setText(dateFormat.format(set.getLastModified()));
-        if(!set.getRecentlyDone()) {
-            holder.lastModifiedTxt.setTextColor(Color.RED);
-        } else {
-            holder.lastModifiedTxt.setTextColor(Color.BLACK);
-        }
     }
 
     @Override

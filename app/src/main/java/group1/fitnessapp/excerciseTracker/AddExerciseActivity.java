@@ -53,6 +53,9 @@ public class AddExerciseActivity extends AppCompatActivity {
                         searchView.clearFocus();
                         list.clear();
                         list.addAll(task.get());
+                        if(list.isEmpty()) {
+                           showDialogBox("No Results Found!");
+                        }
                     } catch(Exception e) {
                         e.printStackTrace();
                     }
