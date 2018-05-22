@@ -20,6 +20,8 @@ import java.util.ArrayList;
  * Created by aaron on 4/04/2018.
  */
 
+// TODO must be able to handle inability to connect to API
+
 public class FoodSearchASyncTask extends AsyncTask<String, Void, ArrayList<Food>> {
     @Override
     protected ArrayList<Food> doInBackground(String... search) {
@@ -34,7 +36,7 @@ public class FoodSearchASyncTask extends AsyncTask<String, Void, ArrayList<Food>
     private class FoodAPI{
         private ArrayList<Food> search(String query) throws IOException, JSONException {
             String app_id = "6b98342e";
-            String app_key = "a191dc56024fad657c97dba4f2d44d33";
+            String app_key = "25409cb1dfdbaba6f4c2d21ed09016e3";
 
             URL url = new URL("https://trackapi.nutritionix.com/v2/search/instant?query="+query);
             HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();

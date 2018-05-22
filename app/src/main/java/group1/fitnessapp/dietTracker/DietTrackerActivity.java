@@ -1,5 +1,6 @@
 package group1.fitnessapp.dietTracker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,39 +16,54 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
 import group1.fitnessapp.R;
 import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
 
 public class DietTrackerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // All GUI elements of the activity
-    private ProgressBar remainingProgressBar = null;
-    private ListView ls = null;
+    private TextView calorieGoal;
+    private TextView caloriesRemaining;
+    private TextView caloriesUsed;
+    private ProgressBar remainingProgressBar;
+    private TextView selectedDate;
 
     // Food list items
     private FoodListAdapter adapt = null;
     private ArrayList<Food> foodArrayList = new ArrayList<>();
     private int goal = 0;
 
+    // DB elements
+    DietDBHandler db;
+
+    // Utility
+    private Date currentDate = Calendar.getInstance().getTime();
+    @SuppressLint("SimpleDateFormat")
+    private SimpleDateFormat df = new SimpleDateFormat("dd MMM YYYY");
+
+    //Variables
+    private Date currentViewingDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diet_tracker);
 
-        // Finding GUI Elements
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Setting up activity
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        remainingProgressBar = findViewById(R.id.dietProgressBar);
-        adapt =  new FoodListAdapter(this, foodArrayList);
-        ls = (ListView) findViewById(R.id.ls_diet_food);
-        ls.setAdapter(adapt);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -55,14 +71,6 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         FloatingActionButton addFood = (FloatingActionButton) findViewById(R.id.fab);
-
-        //Listeners
-        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                launchEditFood((Food) adapterView.getItemAtPosition(i));
-            }
-        });
         addFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,10 +78,47 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
             }
         });
 
+        // Goal Tracking
+        calorieGoal = findViewById(R.id.goalTxtView);
+        caloriesUsed = findViewById(R.id.usedTxtView);
+        caloriesRemaining = findViewById(R.id.remainingTxtView);
+        remainingProgressBar = findViewById(R.id.dietProgressBar);
+
+        // Date Selection
+        selectedDate = findViewById(R.id.viewingDate);
+        Button incrementDate = findViewById(R.id.incrementDate);
+        incrementDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDate(incrementDate(1));
+            }
+        });
+        Button deIncrementDate = findViewById(R.id.deIncrementDate);
+        deIncrementDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDate(incrementDate(-1));
+            }
+        });
+
+        // Log list
+        adapt =  new FoodListAdapter(this, foodArrayList);
+        ListView ls = findViewById(R.id.ls_diet_food);
+        ls.setAdapter(adapt);
+        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                launchEditFood((Food) adapterView.getItemAtPosition(i));
+            }
+        });
+
+
+        // Preparing database
+        db = new DietDBHandler(this);
+
         // Startup setup functions
-        generateTestData();
-        getPreferences();
-        updateCalories();
+        currentViewingDate = currentDate;
+        setDate(currentViewingDate);
     }
 
     // Startup Functions
@@ -86,39 +131,60 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         }
     }
 
-    private void generateTestData() {
-        foodArrayList.add(new Food("Peach Rings", "JuiceFuls",1, 50, "g", 238));
-        foodArrayList.add(new Food("Almond Apple Cookie", "BreadSmith",2, 1.0, "cookie", 79));
+    private void getLog(String date){
+        foodArrayList.clear();
+        ArrayList<Food> toAdd = db.getLogDate(date);
+        if (toAdd != null){
+            foodArrayList.addAll(toAdd);
+        }
+        adapt.notifyDataSetChanged();
+        updateCalories();
+    }
 
+    private Date incrementDate(int n){
+        if( n == 1){
+            currentViewingDate = new Date(currentViewingDate.getTime() + (long) (24 * 3600 * 1000));
+        }else if( n == -1){
+            currentViewingDate = new Date(currentViewingDate.getTime() - (long) (24 * 3600 * 1000));
+        }
+        return  currentViewingDate;
+    }
+
+    private void setDate(Date date){
+        Date tomorrow = new Date(currentDate.getTime() + (long) (24 * 3600 * 1000));
+        Date yesterday = new Date(currentDate.getTime() - (long) (24 * 3600 * 1000));
+
+        if (date.equals(currentDate)){
+            selectedDate.setText(String.format("Today %s", df.format(date)));
+        }else if(date.equals(tomorrow)){
+            selectedDate.setText(String.format("Tomorrow %s", df.format(date)));
+        }else if(date.equals(yesterday)){
+            selectedDate.setText(String.format("Yesterday %s", df.format(date)));
+        }else{
+            selectedDate.setText(df.format(date));
+        }
+        getLog(df.format(currentViewingDate));
     }
 
     // Common Functions
+    @SuppressLint("DefaultLocale")
     private void updateCalories() {
-        // Calorie goal
-        TextView calorieGoal = findViewById(R.id.goalTxtView);
+        getPreferences();
         calorieGoal.setText(String.format("%d", goal));
 
-        // Calorie Used
         int used = 0;
-        TextView caloriesUsed = findViewById(R.id.usedTxtView);
         for (int i = 0; i < adapt.getCount(); i++){
-            used += adapt.getItem(i).getTotalCalories();
+            used += Objects.requireNonNull(adapt.getItem(i)).getTotalCalories();
         }
         caloriesUsed.setText(String.format("%d", used));
-
-        // Calories Remaining
-        TextView caloriesRemaining = findViewById(R.id.remainingTxtView);
         caloriesRemaining.setText(String.format("%d", (goal - used)));
-
-        //Update Progress Bar
         remainingProgressBar.setMax(goal);
         remainingProgressBar.setProgress(used, true);
     }
 
     private void addFood(Food food) {
-        foodArrayList.add(food);
-        adapt.notifyDataSetChanged();
-        updateCalories();
+        db.foodLogAdd(df.format(currentViewingDate), food);
+        getLog(df.format(currentViewingDate));
     }
 
     private void removeFood (Food toDelete){
@@ -133,11 +199,8 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
                 }
             }
         }
-        if(!foodArrayList.remove(foundDelete)){
-            System.out.println("Delete failed no match found");
-        }
-        adapt.notifyDataSetChanged();
-        updateCalories();
+        db.deleteFood(foundDelete);
+        getLog(df.format(currentViewingDate));
     }
 
     private void showToast(String text) {
