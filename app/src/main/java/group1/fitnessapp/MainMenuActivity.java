@@ -76,11 +76,14 @@ public class MainMenuActivity extends AppCompatActivity
         updateDietTracker();
     }
 
-    // Launch activities via cards
+    // Launch activities
     private void startDietTracker() {
-        // For testing
-        // Intent intent = new Intent(this, WeightTrackerActivity.class);
         Intent intent = new Intent(this, DietTrackerActivity.class);
+        startActivity(intent);
+    }
+
+    private void startWeightTracker() {
+        Intent intent = new Intent(this, WeightTrackerActivity.class);
         startActivity(intent);
     }
 
@@ -98,6 +101,7 @@ public class MainMenuActivity extends AppCompatActivity
         caloriesRemaining.setText(String.format("%d", (goal - used)));
         remainingProgressBar.setMax(goal);
         remainingProgressBar.setProgress(used, true);
+        db.close();
     }
 
     private void getPreferences() {
@@ -164,6 +168,8 @@ public class MainMenuActivity extends AppCompatActivity
 
         if (id == R.id.nav_dietTracker) {
             startDietTracker();
+        } else if (id == R.id.nav_weightTracker) {
+            startWeightTracker();
         } else if (id == R.id.nav_excerciseTracker) {
 
         } else if (id == R.id.nav_stepTracker) {

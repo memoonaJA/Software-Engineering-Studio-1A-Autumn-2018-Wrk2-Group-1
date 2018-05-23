@@ -1,9 +1,12 @@
 package group1.fitnessapp.weightTracker;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class WeightDBHandler extends SQLiteOpenHelper{
@@ -40,15 +43,48 @@ public class WeightDBHandler extends SQLiteOpenHelper{
     // CRUD METHODS HERE
     // CREATE --------------------------------------------------------------------------------------
     public void addWeight(Weight weight){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(WEIGHT_LOG_DATE, weight.getLogDate());
+        values.put(WEIGHT_WEIGHT, weight.getWeight());
+        values.put(WEIGHT_UNITS, weight.getUnits());
+
+        db.insert(TABLE_NAME, null, values);
+        db.close();
     }
 
     // READ ----------------------------------------------------------------------------------------
-    public void getLastFifty(Date StartDate){
+    public ArrayList<Weight> getLastFifty(){
+        ArrayList<Weight> log = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
+        int count = 0;
+        if(cursor.moveToLast()){
+            do {
+                count++;
+                Weight weight = new Weight(
+                        cursor.getInt(0),       // Key ID
+                        cursor.getString(1),    // LogDate
+                        cursor.getDouble(2),    // Weight
+                        cursor.getString(3)     // Units
+                );
+                log.add(weight);
+            } while (cursor.moveToPrevious() && count != 51);
+        }
+        db.close();
+        cursor.close();
+        return log;
     }
 
     // UPDATE --------------------------------------------------------------------------------------
 
     // DESTROY -------------------------------------------------------------------------------------
+    public boolean deleteWeight(Weight toDelete){
+        SQLiteDatabase db = this.getWritableDatabase();
+        boolean result = db.delete(TABLE_NAME, WEIGHT_KEY_ID + " = " + toDelete.getKey_id(), null) > 0;
+        db.close();
+        return result;
+    }
 }

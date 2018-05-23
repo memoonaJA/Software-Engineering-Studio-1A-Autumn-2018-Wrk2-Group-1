@@ -1,29 +1,34 @@
 package group1.fitnessapp.weightTracker;
 
-import android.annotation.SuppressLint;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Weight {
-    private Date logDate;
+    private int key_id;
+    private String logDate;
     private double weight;
     private String units;
 
-    public  Weight(Date logDate, double weight, String units){
+    public  Weight(String logDate, double weight, String units){
+        this.key_id = -1;
+        this.logDate = logDate;
+        this.weight = weight;
+        this.units = units;
+    }
+    public  Weight(int key_id, String logDate, double weight, String units){
+        this.key_id = key_id;
         this.logDate = logDate;
         this.weight = weight;
         this.units = units;
     }
 
-    public Date getLogDate() {
-        return logDate;
+    public int getKey_id() {
+        return key_id;
     }
 
-    public String getLogDateFormatted() {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat df = new SimpleDateFormat("dd MMM YYYY");
-        return df.format(logDate);
+    public void setKey_id(int key_id) {
+        this.key_id = key_id;
+    }
+
+    public String getLogDate() {
+        return logDate;
     }
 
     public double getWeight() {

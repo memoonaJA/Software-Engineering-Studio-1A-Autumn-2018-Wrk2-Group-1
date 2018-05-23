@@ -3,7 +3,6 @@ package group1.fitnessapp.weightTracker;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -47,13 +46,12 @@ public class WeightTrackerActivity extends AppCompatActivity {
             }
         });
 
+        log = new ArrayList<>();
+
         // GUI Elements
         listView = findViewById(R.id.weight_log);
         weightListAdapter =  new WeightListAdapter(this, log);
         listView.setAdapter(weightListAdapter);
-
-        // DB
-        dbHandler = new WeightDBHandler(this);
 
         // Setup
         getLog();
@@ -62,12 +60,31 @@ public class WeightTrackerActivity extends AppCompatActivity {
 
     private void getLog() {
         generateTestData();
+//        WeightDBHandler dbHandler = new WeightDBHandler(this);
+//        log.clear();
+//        log = dbHandler.getLastFifty();
+//        weightListAdapter.notifyDataSetChanged();
+//        updateGraph();
+
     }
 
     private void generateTestData() {
-        log = new ArrayList<>();
-        log.add(new Weight(currentDate, 110, "Kg"));
+        log.add(new Weight(df.format(currentDate), 110, "Kg"));
         weightListAdapter.notifyDataSetChanged();
+    }
+
+    private void addWeight(Weight weight){
+        WeightDBHandler dbHandler = new WeightDBHandler(this);
+        dbHandler.addWeight(weight);
+        dbHandler.close();
+        getLog();
+    }
+
+    private void removeWeight(Weight weight){
+        WeightDBHandler dbHandler = new WeightDBHandler(this);
+        dbHandler.deleteWeight(weight);
+        dbHandler.close();
+        getLog();
     }
 
     private void updateGraph() {

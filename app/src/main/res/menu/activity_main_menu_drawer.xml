@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_menu_send"
             android:title="Diet Tracker" />
         <item
+            android:id="@+id/nav_weightTracker"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Weight Tracker" />
+        <item
             android:id="@+id/nav_excerciseTracker"
             android:icon="@drawable/ic_menu_send"
             android:title="Excercise Tracker" />
