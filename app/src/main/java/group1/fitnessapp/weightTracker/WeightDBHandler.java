@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class WeightDBHandler extends SQLiteOpenHelper{
     //DB Features
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "WeightFeature.db";
     private static final String TABLE_NAME = "WeightLog";
 
@@ -76,6 +76,48 @@ public class WeightDBHandler extends SQLiteOpenHelper{
         db.close();
         cursor.close();
         return log;
+    }
+
+    public ArrayList<Weight> getAll(){
+        ArrayList<Weight> log = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if(cursor.moveToFirst()){
+            do {
+                Weight weight = new Weight(
+                        cursor.getInt(0),       // Key ID
+                        cursor.getString(1),    // LogDate
+                        cursor.getDouble(2),    // Weight
+                        cursor.getString(3)     // Units
+                );
+                log.add(weight);
+            } while (cursor.moveToNext() );
+        }
+        db.close();
+        cursor.close();
+        return log;
+    }
+
+    public double getLastWeight(){
+        ArrayList<Weight> log = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if(cursor.moveToLast()){
+            Weight weight = new Weight(
+                    cursor.getInt(0),       // Key ID
+                    cursor.getString(1),    // LogDate
+                    cursor.getDouble(2),    // Weight
+                    cursor.getString(3)     // Units
+            );
+            db.close();
+            cursor.close();
+            return weight.getWeight();
+        }
+        db.close();
+        cursor.close();
+        return 0;
     }
 
     // UPDATE --------------------------------------------------------------------------------------

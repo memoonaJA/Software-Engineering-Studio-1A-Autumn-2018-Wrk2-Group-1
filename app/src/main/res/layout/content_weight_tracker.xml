@@ -8,28 +8,35 @@
     tools:context=".weightTracker.WeightTrackerActivity"
     tools:showIn="@layout/activity_weight_tracker">
 
-    <ImageView
-        android:id="@+id/placeHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="196dp"
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/logGraph"
+        android:layout_width="match_parent"
+        android:layout_height="150dip"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logGraph" />
 
     <ListView
         android:id="@+id/weight_log"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/placeHolder">
+        app:layout_constraintTop_toBottomOf="@+id/divider6">
 
     </ListView>
+
 </android.support.constraint.ConstraintLayout>
