@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
+import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
 import group1.fitnessapp.dietTracker.DietTrackerActivity;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
 
@@ -92,23 +93,39 @@ public class ExerciseTrackerActivity extends AppCompatActivity implements Naviga
         return super.onOptionsItemSelected(item);
     }
 
+    // Launch activities via cards
+    private void startDietTracker() {
+        startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startBMITracker() {
+        startActivity(new Intent(this, BMICalculatorActivity.class));
+    }
+
+    private  void startExerciseTracker(){
+        // Should not start another version of itself
+        //startActivity(new Intent(this, ExerciseTrackerActivity.class));
+    }
+
+    private void startStepTracker(){
+        startActivity(new Intent(this, StepCounterActivity.class));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_dietTracker) {
-            Intent intent = new Intent(this, DietTrackerActivity.class);
-            startActivity(intent);
+            startDietTracker();
+        } else if (id == R.id.nav_bmiCalculator) {
+            startBMITracker();
         } else if (id == R.id.nav_excerciseTracker) {
-
+            startExerciseTracker();
         } else if (id == R.id.nav_stepTracker) {
-            Intent intent = new Intent(this, StepCounterActivity.class);
-            startActivity(intent);
+            startStepTracker();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

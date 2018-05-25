@@ -9,9 +9,13 @@
             android:icon="@drawable/ic_menu_send"
             android:title="Diet Tracker" />
         <item
+            android:id="@+id/nav_bmiCalculator"
+            android:icon="@drawable/ic_menu_send"
+            android:title="BMI Calculator" />
+        <item
             android:id="@+id/nav_excerciseTracker"
             android:icon="@drawable/ic_menu_send"
-            android:title="Excercise Tracker" />
+            android:title="Exercise Tracker" />
         <item
             android:id="@+id/nav_stepTracker"
             android:icon="@drawable/ic_menu_send"

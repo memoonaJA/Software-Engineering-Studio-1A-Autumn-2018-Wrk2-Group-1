@@ -52,11 +52,12 @@
         <activity android:name=".excerciseTracker.AddSelectedExerciseActivity" />
         <activity android:name=".excerciseTracker.ViewSetsActivity" />
         <!-- suppress AndroidDomInspection -->
-        <!--suppress AndroidDomInspection -->
+        <!-- suppress AndroidDomInspection -->
         <activity android:name=".excerciseTracker.AddSetDialogBoxActivity" />
         <activity android:name=".excerciseTracker.ViewSelectedSetActivity" />
-        <!--suppress AndroidDomInspection -->
+        <!-- suppress AndroidDomInspection -->
         <activity android:name=".excerciseTracker.CustomDialogBoxActivity" />
+        <activity android:name=".bmiCalculator.BMICalculatorActivity"></activity>
     </application>
 
 </manifest>
