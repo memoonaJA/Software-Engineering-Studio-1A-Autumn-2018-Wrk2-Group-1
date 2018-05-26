@@ -44,14 +44,18 @@
             android:label="@string/title_activity_step_counter"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".weightTracker.WeightTrackerActivity"
+            android:label="@string/title_activity_weight_tracker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".excerciseTracker.ExerciseTrackerActivity"
             android:label="@string/title_activity_excercise_tracker"
             android:theme="@style/AppTheme.NoActionBar" />
+      
         <activity android:name=".excerciseTracker.ViewExercisesActivity" />
         <activity android:name=".excerciseTracker.AddExerciseActivity" />
         <activity android:name=".excerciseTracker.AddSelectedExerciseActivity" />
         <activity android:name=".excerciseTracker.ViewSetsActivity" />
-        <!-- suppress AndroidDomInspection -->
         <!-- suppress AndroidDomInspection -->
         <activity android:name=".excerciseTracker.AddSetDialogBoxActivity" />
         <activity android:name=".excerciseTracker.ViewSelectedSetActivity" />

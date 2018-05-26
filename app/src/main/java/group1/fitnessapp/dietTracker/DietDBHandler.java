@@ -34,7 +34,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
-                + FOOD_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + FOOD_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FOOD_LOG_DATE + " TEXT, "
                 + FOOD_NAME + " TEXT, "
                 + FOOD_SUBTEXT + " TEXT, "
@@ -95,6 +95,7 @@ public class DietDBHandler extends SQLiteOpenHelper{
                 }
             }while (cursor.moveToNext());
         }
+        db.close();
         cursor.close();
         return log;
     }
@@ -107,6 +108,8 @@ public class DietDBHandler extends SQLiteOpenHelper{
     // Remove food from log
     public boolean deleteFood(Food toDelete){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, FOOD_KEY_ID + " = " + toDelete.getKeyId(), null) > 0;
+        boolean result = db.delete(TABLE_NAME, FOOD_KEY_ID + " = " + toDelete.getKeyId(), null) > 0;
+        db.close();
+        return result;
     }
 }
