@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
@@ -32,7 +33,8 @@ public class WeightListAdapter extends ArrayAdapter<Weight>{
 
         // Setting text
         if (w != null){
-            weightDate.setText(w.getLogDate());
+            SimpleDateFormat df = new SimpleDateFormat("dd MMM YYYY");
+            weightDate.setText(df.format(w.getLogDate()));
             weight.setText(String.format("%s %s", Double.toString(w.getWeight()), w.getUnits()));
         }
         return rowView;

@@ -6,12 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.net.ConnectException;
+import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class WeightDBHandler extends SQLiteOpenHelper{
     //DB Features
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "WeightFeature.db";
     private static final String TABLE_NAME = "WeightLog";
 
@@ -28,7 +30,7 @@ public class WeightDBHandler extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + WEIGHT_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + WEIGHT_LOG_DATE + " TEXT, "
+                + WEIGHT_LOG_DATE + " LONG, "
                 + WEIGHT_WEIGHT + " DOUBLE, "
                 + WEIGHT_UNITS + " TEXT " + ")";
         db.execSQL(CREATE_TABLE);;
@@ -66,7 +68,7 @@ public class WeightDBHandler extends SQLiteOpenHelper{
                 count++;
                 Weight weight = new Weight(
                         cursor.getInt(0),       // Key ID
-                        cursor.getString(1),    // LogDate
+                        cursor.getLong(1),    // LogDate
                         cursor.getDouble(2),    // Weight
                         cursor.getString(3)     // Units
                 );
@@ -87,7 +89,7 @@ public class WeightDBHandler extends SQLiteOpenHelper{
             do {
                 Weight weight = new Weight(
                         cursor.getInt(0),       // Key ID
-                        cursor.getString(1),    // LogDate
+                        cursor.getLong(1),    // LogDate
                         cursor.getDouble(2),    // Weight
                         cursor.getString(3)     // Units
                 );
@@ -107,7 +109,7 @@ public class WeightDBHandler extends SQLiteOpenHelper{
         if(cursor.moveToLast()){
             Weight weight = new Weight(
                     cursor.getInt(0),       // Key ID
-                    cursor.getString(1),    // LogDate
+                    cursor.getLong(1),    // LogDate
                     cursor.getDouble(2),    // Weight
                     cursor.getString(3)     // Units
             );
@@ -121,6 +123,14 @@ public class WeightDBHandler extends SQLiteOpenHelper{
     }
 
     // UPDATE --------------------------------------------------------------------------------------
+    public void editWeight(Weight original, Weight newWeight){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(WEIGHT_LOG_DATE, newWeight.getLogDate());   //Date
+        cv.put(WEIGHT_WEIGHT, newWeight.getWeight());   //Date
+        db.update(TABLE_NAME, cv, WEIGHT_KEY_ID + "=" +original.getKey_id(), null);
+        db.close();
+    }
 
     // DESTROY -------------------------------------------------------------------------------------
     public boolean deleteWeight(Weight toDelete){

@@ -2,17 +2,17 @@ package group1.fitnessapp.weightTracker;
 
 public class Weight {
     private int key_id;
-    private String logDate;
+    private long logDate;
     private double weight;
     private String units;
 
-    public  Weight(String logDate, double weight, String units){
+    public  Weight(long logDate, double weight, String units){
         this.key_id = -1;
         this.logDate = logDate;
         this.weight = weight;
         this.units = units;
     }
-    public  Weight(int key_id, String logDate, double weight, String units){
+    public  Weight(int key_id, long logDate, double weight, String units){
         this.key_id = key_id;
         this.logDate = logDate;
         this.weight = weight;
@@ -27,7 +27,7 @@ public class Weight {
         this.key_id = key_id;
     }
 
-    public String getLogDate() {
+    public long getLogDate() {
         return logDate;
     }
 

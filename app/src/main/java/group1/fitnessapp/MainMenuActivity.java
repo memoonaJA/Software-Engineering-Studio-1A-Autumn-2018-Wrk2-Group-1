@@ -20,9 +20,15 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
 
@@ -30,6 +36,8 @@ import group1.fitnessapp.dietTracker.DietDBHandler;
 import group1.fitnessapp.dietTracker.DietTrackerActivity;
 import group1.fitnessapp.dietTracker.Food;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
+import group1.fitnessapp.weightTracker.Weight;
+import group1.fitnessapp.weightTracker.WeightDBHandler;
 import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
 public class MainMenuActivity extends AppCompatActivity
@@ -41,6 +49,7 @@ public class MainMenuActivity extends AppCompatActivity
     private TextView caloriesRemaining;
     private ProgressBar remainingProgressBar;
     private CardView dietCardView;
+    private GraphView graph;
 
     // Diet Tracker variables
     int goal;
@@ -72,8 +81,10 @@ public class MainMenuActivity extends AppCompatActivity
                 startDietTracker();
             }
         });
+        graph = findViewById(R.id.summaryGraph);
         getPreferences();
         updateDietTracker();
+        new weightLog(this);
     }
 
     // Launch activities
@@ -86,6 +97,69 @@ public class MainMenuActivity extends AppCompatActivity
         Intent intent = new Intent(this, WeightTrackerActivity.class);
         startActivity(intent);
     }
+
+    private class weightLog{
+        private ArrayList<Weight> log;
+        private Context context;
+
+        weightLog(Context context){
+            WeightDBHandler db = new WeightDBHandler(context);
+            log = new ArrayList<>(db.getLastFifty());
+            this.context = context;
+            updateGraph();
+        }
+
+        private void updateGraph() {
+            ArrayList<Weight> l = new ArrayList<>(log);
+            l.sort(new Comparator<Weight>() {
+                @Override
+                public int compare(Weight o1, Weight o2) {
+                    return compare(o1.getLogDate(), o2.getLogDate());
+                }
+                private int compare(long a, long b){
+                    return Long.compare(a, b);
+                }
+            });
+
+            graph.removeAllSeries();
+            DataPoint[] dataPoints = new DataPoint[l.size()];
+            for (int i = 0; i < l.size(); i++){
+                Weight current = l.get(i);
+                dataPoints[i] = new DataPoint(new Date(current.getLogDate()), current.getWeight());
+            }
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints);
+            graph.addSeries(series);
+
+            // Setting axis min and max values
+            // Finding the values
+            double minWeight = 999999;
+            double maxWeight = 0;
+            long minDate = Long.MAX_VALUE;
+            long maxDate = 0;
+            for (Weight w : l){
+                if(w.getWeight() < minWeight) minWeight = w.getWeight();
+                if(w.getWeight() > maxWeight) maxWeight = w.getWeight();
+                if(w.getLogDate() < minDate) minDate = w.getLogDate();
+                if(w.getLogDate() > maxDate) maxDate= w.getLogDate();
+            }
+
+            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context));
+
+            // y
+            graph.getViewport().setMinY(minWeight);
+            graph.getViewport().setMaxY(maxWeight);
+            graph.getViewport().setYAxisBoundsManual(true);
+
+            // X
+            graph.getViewport().setMinX(minDate);
+            graph.getViewport().setMaxX(maxDate);
+            graph.getViewport().setXAxisBoundsManual(true);
+
+            graph.getGridLabelRenderer().setHumanRounding(false, true);
+
+        }
+    }
+
 
     private void updateDietTracker() {
         calorieGoal.setText(String.format("%d", goal));
