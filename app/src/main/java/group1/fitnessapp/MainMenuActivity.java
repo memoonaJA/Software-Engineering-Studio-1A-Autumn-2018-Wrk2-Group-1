@@ -85,17 +85,6 @@ public class MainMenuActivity extends AppCompatActivity
         updateDietTracker();
         new weightLog(this);
     }
-    
-    // Launch activities
-    private void startDietTracker() {
-        Intent intent = new Intent(this, DietTrackerActivity.class);
-        startActivity(intent);
-    }
-
-    private void startWeightTracker() {
-        Intent intent = new Intent(this, WeightTrackerActivity.class);
-        startActivity(intent);
-    }
 
     private class weightLog{
         private ArrayList<Weight> log;
@@ -235,6 +224,11 @@ public class MainMenuActivity extends AppCompatActivity
     // Launch activities via cards
     private void startDietTracker() {
         startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startWeightTracker() {
+        Intent intent = new Intent(this, WeightTrackerActivity.class);
+        startActivity(intent);
     }
 
     private void startBMITracker() {
