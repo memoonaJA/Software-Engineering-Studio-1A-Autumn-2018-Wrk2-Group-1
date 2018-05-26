@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,10 +28,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Objects;
 
+import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
 import group1.fitnessapp.dietTracker.DietDBHandler;
 import group1.fitnessapp.dietTracker.DietTrackerActivity;
+import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
 import group1.fitnessapp.dietTracker.Food;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
 import group1.fitnessapp.weightTracker.Weight;
@@ -59,14 +58,14 @@ public class MainMenuActivity extends AppCompatActivity
         generatePreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Diet Tracker GUI elements
@@ -86,7 +85,7 @@ public class MainMenuActivity extends AppCompatActivity
         updateDietTracker();
         new weightLog(this);
     }
-
+    
     // Launch activities
     private void startDietTracker() {
         Intent intent = new Intent(this, DietTrackerActivity.class);
@@ -159,8 +158,7 @@ public class MainMenuActivity extends AppCompatActivity
 
         }
     }
-
-
+    
     private void updateDietTracker() {
         calorieGoal.setText(String.format("%d", goal));
         int used = 0;
@@ -234,24 +232,40 @@ public class MainMenuActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // Launch activities via cards
+    private void startDietTracker() {
+        startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startBMITracker() {
+        startActivity(new Intent(this, BMICalculatorActivity.class));
+    }
+
+    private  void startExerciseTracker(){
+        startActivity(new Intent(this, ExerciseTrackerActivity.class));
+    }
+
+    private void startStepTracker(){
+        startActivity(new Intent(this, StepCounterActivity.class));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_dietTracker) {
             startDietTracker();
         } else if (id == R.id.nav_weightTracker) {
             startWeightTracker();
+        } else if (id == R.id.nav_bmiCalculator) {
+            startBMITracker();
         } else if (id == R.id.nav_excerciseTracker) {
-
+            startExerciseTracker();
         } else if (id == R.id.nav_stepTracker) {
-            Intent intent = new Intent(this, StepCounterActivity.class);
-            startActivity(intent);
+            startStepTracker();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -46,6 +47,21 @@
             android:name=".weightTracker.WeightTrackerActivity"
             android:label="@string/title_activity_weight_tracker"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".excerciseTracker.ExerciseTrackerActivity"
+            android:label="@string/title_activity_excercise_tracker"
+            android:theme="@style/AppTheme.NoActionBar" />
+      
+        <activity android:name=".excerciseTracker.ViewExercisesActivity" />
+        <activity android:name=".excerciseTracker.AddExerciseActivity" />
+        <activity android:name=".excerciseTracker.AddSelectedExerciseActivity" />
+        <activity android:name=".excerciseTracker.ViewSetsActivity" />
+        <!-- suppress AndroidDomInspection -->
+        <activity android:name=".excerciseTracker.AddSetDialogBoxActivity" />
+        <activity android:name=".excerciseTracker.ViewSelectedSetActivity" />
+        <!-- suppress AndroidDomInspection -->
+        <activity android:name=".excerciseTracker.CustomDialogBoxActivity" />
+        <activity android:name=".bmiCalculator.BMICalculatorActivity"></activity>
     </application>
 
 </manifest>

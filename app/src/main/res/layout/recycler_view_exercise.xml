@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <android.support.v7.widget.CardView
+            android:layout_width="416dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:elevation="4dp"
+            android:id="@+id/viewExCard">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="370dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/viewExName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:text="Exercise Name"
+                        android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:id="@+id/viewExDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Exercise Description"
+                        android:textSize="15dp"
+                        android:maxLines="5" />
+
+                    <TextView
+                        android:id="@+id/viewExSets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sets: "
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+            <ImageView
+                android:id="@+id/deleteIv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_clear_black_24dp"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        
+    </LinearLayout>
+
+</LinearLayout>
