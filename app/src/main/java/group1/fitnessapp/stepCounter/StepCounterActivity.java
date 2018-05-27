@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,10 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
+import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
+import group1.fitnessapp.dietTracker.DietTrackerActivity;
+import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
+import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
 public class StepCounterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
@@ -105,27 +110,45 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         return super.onOptionsItemSelected(item);
     }
 
+    // Launch activities via cards
+    private void startDietTracker() {
+        startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startWeightTracker() {
+        Intent intent = new Intent(this, WeightTrackerActivity.class);
+        startActivity(intent);
+    }
+
+    private void startBMITracker() {
+        startActivity(new Intent(this, BMICalculatorActivity.class));
+    }
+
+    private  void startExerciseTracker(){
+        startActivity(new Intent(this, ExerciseTrackerActivity.class));
+    }
+
+    private void startStepTracker(){
+        //startActivity(new Intent(this, StepCounterActivity.class));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_dietTracker) {
+            startDietTracker();
+        } else if (id == R.id.nav_weightTracker) {
+            startWeightTracker();
+        } else if (id == R.id.nav_bmiCalculator) {
+            startBMITracker();
+        } else if (id == R.id.nav_excerciseTracker) {
+            startExerciseTracker();
+        } else if (id == R.id.nav_stepTracker) {
+            startStepTracker();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
