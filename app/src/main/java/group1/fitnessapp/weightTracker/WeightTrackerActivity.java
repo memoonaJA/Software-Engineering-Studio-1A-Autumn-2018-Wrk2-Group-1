@@ -108,8 +108,14 @@ public class WeightTrackerActivity extends AppCompatActivity {
             addWeightBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addWeight(new Weight(currentWorkingDate.getTime(), Double.parseDouble(weightEdit.getText().toString()), "kg"));
-                    addWeightDialog.dismiss();
+                    try{
+                        if (Double.parseDouble(weightEdit.getText().toString()) > 0){
+                            addWeight(new Weight(currentWorkingDate.getTime(), Double.parseDouble(weightEdit.getText().toString()), "kg"));
+                            addWeightDialog.dismiss();
+                        }
+                    }catch (NumberFormatException e){
+                        e.printStackTrace();
+                    }
                 }
             });
             addWeightCalBtn.setOnClickListener(new View.OnClickListener() {
@@ -173,13 +179,19 @@ public class WeightTrackerActivity extends AppCompatActivity {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Weight newWeight =  new Weight(
-                            currentWorkingDate.getTime(),
-                            Double.parseDouble(weightEditText.getText().toString()),
-                            "kg"
-                    );
-                    editWeight(weight, newWeight);
-                    editWeightDialog.dismiss();
+                    try {
+                        if (Double.parseDouble(weightEditText.getText().toString()) > 0){
+                            Weight newWeight =  new Weight(
+                                    currentWorkingDate.getTime(),
+                                    Double.parseDouble(weightEditText.getText().toString()),
+                                    "kg"
+                            );
+                            editWeight(weight, newWeight);
+                            editWeightDialog.dismiss();
+                        }
+                    } catch (NumberFormatException e){
+                        e.printStackTrace();
+                    }
                 }
             });
             delete.setOnClickListener(new View.OnClickListener() {

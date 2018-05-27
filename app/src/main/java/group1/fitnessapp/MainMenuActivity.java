@@ -47,8 +47,8 @@ public class MainMenuActivity extends AppCompatActivity
     private TextView caloriesUsed;
     private TextView caloriesRemaining;
     private ProgressBar remainingProgressBar;
-    private CardView dietCardView;
     private GraphView graph;
+    private DietTracker dietTracker;
 
     // Diet Tracker variables
     int goal;
@@ -73,7 +73,7 @@ public class MainMenuActivity extends AppCompatActivity
         caloriesUsed = findViewById(R.id.usedTxtView);
         caloriesRemaining = findViewById(R.id.remainingTxtView);
         remainingProgressBar = findViewById(R.id.dietProgressBar);
-        dietCardView = findViewById(R.id.dietCardView);
+        CardView dietCardView = findViewById(R.id.dietCardView);
         dietCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,16 +81,31 @@ public class MainMenuActivity extends AppCompatActivity
             }
         });
         graph = findViewById(R.id.summaryGraph);
+        graph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startWeightTracker();
+            }
+        });
+        CardView weightCardView = findViewById(R.id.weightCardView);
+        weightCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startWeightTracker();
+            }
+        });
+
+
         getPreferences();
-        updateDietTracker();
-        new weightLog(this);
+        dietTracker = new  DietTracker(this);
+        new WeightLog(this);
     }
 
-    private class weightLog{
+    private class WeightLog{
         private ArrayList<Weight> log;
         private Context context;
 
-        weightLog(Context context){
+        WeightLog(Context context){
             WeightDBHandler db = new WeightDBHandler(context);
             log = new ArrayList<>(db.getLastFifty());
             this.context = context;
@@ -147,22 +162,32 @@ public class MainMenuActivity extends AppCompatActivity
 
         }
     }
-    
-    private void updateDietTracker() {
-        calorieGoal.setText(String.format("%d", goal));
-        int used = 0;
-        Date currentDate = Calendar.getInstance().getTime();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd MMM YYYY");
-        DietDBHandler db = new DietDBHandler(this);
-        ArrayList<Food> log = db.getLogDate(df.format(currentDate));
-        for (Food f : log){
-            used += f.getCalories();
+
+    private class DietTracker{
+        private Context context;
+
+        DietTracker(Context context){
+            this.context = context;
+
+            updateDietTracker();
         }
-        caloriesUsed.setText(String.format("%d", used));
-        caloriesRemaining.setText(String.format("%d", (goal - used)));
-        remainingProgressBar.setMax(goal);
-        remainingProgressBar.setProgress(used, true);
-        db.close();
+
+        public void updateDietTracker() {
+            calorieGoal.setText(String.format("%d", goal));
+            int used = 0;
+            Date currentDate = Calendar.getInstance().getTime();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd MMM YYYY");
+            DietDBHandler db = new DietDBHandler(context);
+            ArrayList<Food> log = db.getLogDate(df.format(currentDate));
+            for (Food f : log){
+                used += f.getCalories();
+            }
+            caloriesUsed.setText(String.format("%d", used));
+            caloriesRemaining.setText(String.format("%d", (goal - used)));
+            remainingProgressBar.setMax(goal);
+            remainingProgressBar.setProgress(used, true);
+            db.close();
+        }
     }
 
     private void getPreferences() {
@@ -186,7 +211,7 @@ public class MainMenuActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-        updateDietTracker();
+        dietTracker.updateDietTracker();
     }
 
     @Override

@@ -18,6 +18,7 @@ import group1.fitnessapp.R;
 import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
 import group1.fitnessapp.dietTracker.DietTrackerActivity;
 import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
+import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
 public class StepCounterActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -81,9 +82,14 @@ public class StepCounterActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // Launch activities
+    // Launch activities via cards
     private void startDietTracker() {
         startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startWeightTracker() {
+        Intent intent = new Intent(this, WeightTrackerActivity.class);
+        startActivity(intent);
     }
 
     private void startBMITracker() {
@@ -95,8 +101,7 @@ public class StepCounterActivity extends AppCompatActivity
     }
 
     private void startStepTracker(){
-        // Should not start another version of itself
-        // startActivity(new Intent(this, StepCounterActivity.class));
+        //startActivity(new Intent(this, StepCounterActivity.class));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -106,6 +111,8 @@ public class StepCounterActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_dietTracker) {
             startDietTracker();
+        } else if (id == R.id.nav_weightTracker) {
+            startWeightTracker();
         } else if (id == R.id.nav_bmiCalculator) {
             startBMITracker();
         } else if (id == R.id.nav_excerciseTracker) {

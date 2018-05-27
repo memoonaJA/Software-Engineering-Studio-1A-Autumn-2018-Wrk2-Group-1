@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_apple"
             android:title="Diet Tracker" />
         <item
+            android:id="@+id/nav_weightTracker"
+            android:icon="@drawable/ic_scale"
+            android:title="Weight Tracker" />
+        <item
             android:id="@+id/nav_bmiCalculator"
             android:icon="@drawable/ic_calculator"
             android:title="BMI Calculator" />

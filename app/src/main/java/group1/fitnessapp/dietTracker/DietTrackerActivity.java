@@ -32,6 +32,7 @@ import group1.fitnessapp.R;
 import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
 import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
 import group1.fitnessapp.stepCounter.StepCounterActivity;
+import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
 public class DietTrackerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // All GUI elements of the activity
@@ -301,10 +302,14 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         return super.onOptionsItemSelected(item);
     }
 
-    // Launch activities
+    // Launch activities via cards
     private void startDietTracker() {
-        // Should not start another version of itself
         //startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startWeightTracker() {
+        Intent intent = new Intent(this, WeightTrackerActivity.class);
+        startActivity(intent);
     }
 
     private void startBMITracker() {
@@ -326,6 +331,8 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
         int id = item.getItemId();
         if (id == R.id.nav_dietTracker) {
             startDietTracker();
+        } else if (id == R.id.nav_weightTracker) {
+            startWeightTracker();
         } else if (id == R.id.nav_bmiCalculator) {
             startBMITracker();
         } else if (id == R.id.nav_excerciseTracker) {
