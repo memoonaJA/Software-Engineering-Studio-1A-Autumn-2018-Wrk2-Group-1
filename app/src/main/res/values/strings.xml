@@ -15,7 +15,6 @@
     <!-- Level Tracker values -->
     <string name ="title_activity_level_tracker">Level Tracker</string>
     <string name="title_activity_diet_tracker_settings">Settings</string>
-    <string name="title_activity_step_counter">Step Counter</string>
 
     <!-- Strings related to Settings -->
 

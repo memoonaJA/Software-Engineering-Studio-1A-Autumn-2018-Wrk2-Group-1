@@ -49,7 +49,7 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     private TextView stepsLeft;
     private CircularProgressBar stepProgress;
     private ProgressBar dailyProgress;
-
+    private TextView etStepCount;
     private Button btnReset;
 
     @Override
