@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.util.ArrayList;
@@ -61,6 +60,9 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         setSupportActionBar(toolbar);
 
         //Initialize components
+
+        etStepCount = findViewById(R.id.etBaro);
+        btnReset = findViewById(R.id.btnReset);
         tvStepCount = findViewById(R.id.txtSteps);
         dailyProgress = findViewById(R.id.progressBar8);
         stepProgress = findViewById(R.id.stepsProgress);

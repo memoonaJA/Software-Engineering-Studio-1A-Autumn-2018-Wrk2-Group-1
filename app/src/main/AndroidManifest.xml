@@ -45,6 +45,11 @@
         <activity
             android:name=".stepCounter.StepCounterActivity"
             android:label="@string/title_activity_step_counter"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".levelTracker.LevelTrackerActivity"
+            android:label="@string/title_activity_level_tracker"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".weightTracker.WeightTrackerActivity"

@@ -29,7 +29,7 @@ import group1.fitnessapp.R;
 
 public class LevelTrackerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
-
+        
     //Other
     SensorManager sensorManager;
     boolean running = false;
