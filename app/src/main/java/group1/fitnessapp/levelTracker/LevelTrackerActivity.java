@@ -1,4 +1,4 @@
-package group1.fitnessapp.stepCounter;
+package group1.fitnessapp.levelTracker;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,13 +7,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,51 +19,56 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
-import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
-import group1.fitnessapp.dietTracker.DietTrackerActivity;
-import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
-import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
-public class StepCounterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
+public class LevelTrackerActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
     //Other
     SensorManager sensorManager;
     boolean running = false;
-    float stepCountForReset = 0;
-    float stepCountSinceLastReset;
-    float stepCountSinceOnline;
+    float flightsClimbed = 0;
+    int samples = 0;
+    int valIndex = 0;
+    ArrayList<Float> recordedVals = new ArrayList<>();
 
     //Elements
-    private TextView tvStepCount;
-    private TextView stepsLeft;
-    private CircularProgressBar stepProgress;
-    private ProgressBar dailyProgress;
-
-    private Button btnReset;
+    private EditText etBaro;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step_counter);
+        setContentView(R.layout.activity_level_tracker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Initialize components
-        tvStepCount = findViewById(R.id.txtSteps);
-        dailyProgress = findViewById(R.id.progressBar8);
-        stepProgress = findViewById(R.id.stepsProgress);
-        stepsLeft = findViewById(R.id.txtStepsLeft);
+        etBaro = findViewById(R.id.etBaro);
+        tvTitle = findViewById(R.id.tvTitle);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        // TODO delete
+        etBaro.setText("0");
+        etBaro.setEnabled(false);
+        etBaro.setClickable(false);
+        tvTitle.setText("Level Tracker???");
+
+        // TODO this needs to be changed to the add food fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,7 +82,6 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
 
     @Override
     public void onBackPressed() {
-        stepCountSinceLastReset = 0;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -91,7 +93,7 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.step_counter, menu);
+        getMenuInflater().inflate(R.menu.level_tracker, menu);
         return true;
     }
 
@@ -110,45 +112,27 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         return super.onOptionsItemSelected(item);
     }
 
-    // Launch activities via cards
-    private void startDietTracker() {
-        startActivity(new Intent(this, DietTrackerActivity.class));
-    }
-
-    private void startWeightTracker() {
-        Intent intent = new Intent(this, WeightTrackerActivity.class);
-        startActivity(intent);
-    }
-
-    private void startBMITracker() {
-        startActivity(new Intent(this, BMICalculatorActivity.class));
-    }
-
-    private  void startExerciseTracker(){
-        startActivity(new Intent(this, ExerciseTrackerActivity.class));
-    }
-
-    private void startStepTracker(){
-        //startActivity(new Intent(this, StepCounterActivity.class));
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_dietTracker) {
-            startDietTracker();
-        } else if (id == R.id.nav_weightTracker) {
-            startWeightTracker();
-        } else if (id == R.id.nav_bmiCalculator) {
-            startBMITracker();
-        } else if (id == R.id.nav_excerciseTracker) {
-            startExerciseTracker();
-        } else if (id == R.id.nav_stepTracker) {
-            startStepTracker();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
         }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -158,7 +142,7 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         super.onResume();
         running = true;
 
-        String[] sensorResults = registerSensors(SENSORS_IN_USE.Step_Counter);
+        String[] sensorResults = registerSensors(SENSORS_IN_USE.Pressure_Sensor);
 
         if (sensorResults.length > 0)
         {
@@ -209,15 +193,58 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (running)
         {
-            stepCountSinceOnline = sensorEvent.values[0];
-            stepCountSinceLastReset = sensorEvent.values[0] - stepCountForReset;
-            String value = String.valueOf(stepCountSinceLastReset);
-            tvStepCount.setText(value.substring(0, value.length() - 2));
-            String left = Float.toString((1200 - stepCountSinceLastReset));
-            stepsLeft.setText(left.substring(0, left.length() - 2) + " STEPS LEFT");
-            stepProgress.setProgressWithAnimation(Math.round((float)stepCountSinceLastReset/1200 * 100));
-            dailyProgress.setProgress(Math.round(stepCountSinceLastReset/1200 * 100), true);
+            samples++;
+            etBaro.setText(String.valueOf(samples));
+
+            if (samples >= 20)
+            {
+                samples = 0;
+                recordedVals.add(valIndex, sensorEvent.values[0]);
+
+                if (valIndex == 50)
+                {
+                    valIndex = 0;
+                    analyzeData();
+                }
+                else
+                {
+                    valIndex++;
+                }
+
+            }
+           // etBaro.setText(String.valueOf(flightsClimbed));
         }
+    }
+
+    private void analyzeData()
+    {
+        if (highest() - lowest() >= 0.1)
+        {
+            flightsClimbed++;
+            Toast.makeText(this, String.valueOf(samples), Toast.LENGTH_SHORT).show();
+        }
+
+        recordedVals.clear();
+    }
+
+    private float lowest()
+    {
+        float min = recordedVals.get(0);
+        for (float val: recordedVals) {
+            min = val <= min ? val : min;
+        }
+
+        return min;
+    }
+
+    private float highest()
+    {
+        float max = recordedVals.get(0);
+        for (float val: recordedVals) {
+            max = val >= max ? val : max;
+        }
+
+        return max;
     }
 
     @Override
@@ -226,10 +253,9 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     }
 
     public enum SENSORS_IN_USE{
-        Step_Counter(Sensor.TYPE_STEP_COUNTER);
+        Pressure_Sensor(Sensor.TYPE_PRESSURE);
 
         private final int value;
-
         SENSORS_IN_USE(final int newValue) {
             value = newValue;
         }
