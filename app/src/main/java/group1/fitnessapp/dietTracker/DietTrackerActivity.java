@@ -65,6 +65,7 @@ public class DietTrackerActivity extends AppCompatActivity implements Navigation
 
         // Setting up activity
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Diet Tracker");
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

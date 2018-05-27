@@ -53,6 +53,7 @@ public class WeightTrackerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_tracker);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Weight Tracker");
         setSupportActionBar(toolbar);
 
         log = new ArrayList<>();
