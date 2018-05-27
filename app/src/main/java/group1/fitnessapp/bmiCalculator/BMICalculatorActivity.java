@@ -9,8 +9,11 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+
 import group1.fitnessapp.R;
 import group1.fitnessapp.dietTracker.DietDBHandler;
+import group1.fitnessapp.weightTracker.WeightDBHandler;
 
 public class BMICalculatorActivity extends AppCompatActivity {
     // GUI ELEMENTS
@@ -28,6 +31,8 @@ public class BMICalculatorActivity extends AppCompatActivity {
         weight = findViewById(R.id.weight);
         result = findViewById(R.id.result);
         Button calculateBMI = findViewById(R.id.calc);
+
+        // Listeners
         calculateBMI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,6 +54,15 @@ public class BMICalculatorActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Setup
+        // Get last weight from the log
+        WeightDBHandler db = new WeightDBHandler(this);
+        double lastWeight = db.getLastWeight();
+        if (lastWeight > 0){
+            weight.setText(Double.toString(lastWeight));
+        }
+
     }
 
     private void displayBMI(float bmi) {
@@ -71,7 +85,8 @@ public class BMICalculatorActivity extends AppCompatActivity {
         } else {
             bmiLabel = "Obese Class III";
         }
-        bmiLabel = "Your BMI is " + bmi + "\n" + bmiLabel;
+        DecimalFormat twoDP = new DecimalFormat("##.00");
+        bmiLabel = "Your BMI is " + twoDP.format(bmi) + "\n" + bmiLabel;
         result.setText(bmiLabel);
     }
 }
