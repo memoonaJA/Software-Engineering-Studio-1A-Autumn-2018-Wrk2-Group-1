@@ -7,11 +7,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +23,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.util.ArrayList;
 
 import group1.fitnessapp.R;
+import group1.fitnessapp.bmiCalculator.BMICalculatorActivity;
+import group1.fitnessapp.dietTracker.DietTrackerActivity;
+import group1.fitnessapp.excerciseTracker.ExerciseTrackerActivity;
+import group1.fitnessapp.weightTracker.WeightTrackerActivity;
 
 public class StepCounterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
@@ -36,7 +45,11 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
     float stepCountSinceOnline;
 
     //Elements
-    private EditText etStepCount;
+    private TextView tvStepCount;
+    private TextView stepsLeft;
+    private CircularProgressBar stepProgress;
+    private ProgressBar dailyProgress;
+
     private Button btnReset;
 
     @Override
@@ -47,24 +60,14 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         setSupportActionBar(toolbar);
 
         //Initialize components
+
         etStepCount = findViewById(R.id.etBaro);
         btnReset = findViewById(R.id.btnReset);
+        tvStepCount = findViewById(R.id.txtSteps);
+        dailyProgress = findViewById(R.id.progressBar8);
+        stepProgress = findViewById(R.id.stepsProgress);
+        stepsLeft = findViewById(R.id.txtStepsLeft);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        // TODO delete
-        etStepCount.setText("0");
-        etStepCount.setEnabled(false);
-        etStepCount.setClickable(false);
-
-        // TODO this needs to be changed to the add food fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -76,15 +79,9 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void resetStepCount(View view)
-    {
-        stepCountForReset = stepCountSinceOnline;
-        stepCountSinceLastReset = 0;
-        etStepCount.setText(String.valueOf(stepCountSinceLastReset));
-    }
-
     @Override
     public void onBackPressed() {
+        stepCountSinceLastReset = 0;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -115,27 +112,45 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         return super.onOptionsItemSelected(item);
     }
 
+    // Launch activities via cards
+    private void startDietTracker() {
+        startActivity(new Intent(this, DietTrackerActivity.class));
+    }
+
+    private void startWeightTracker() {
+        Intent intent = new Intent(this, WeightTrackerActivity.class);
+        startActivity(intent);
+    }
+
+    private void startBMITracker() {
+        startActivity(new Intent(this, BMICalculatorActivity.class));
+    }
+
+    private  void startExerciseTracker(){
+        startActivity(new Intent(this, ExerciseTrackerActivity.class));
+    }
+
+    private void startStepTracker(){
+        //startActivity(new Intent(this, StepCounterActivity.class));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_dietTracker) {
+            startDietTracker();
+        } else if (id == R.id.nav_weightTracker) {
+            startWeightTracker();
+        } else if (id == R.id.nav_bmiCalculator) {
+            startBMITracker();
+        } else if (id == R.id.nav_excerciseTracker) {
+            startExerciseTracker();
+        } else if (id == R.id.nav_stepTracker) {
+            startStepTracker();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -198,7 +213,12 @@ public class StepCounterActivity extends AppCompatActivity implements Navigation
         {
             stepCountSinceOnline = sensorEvent.values[0];
             stepCountSinceLastReset = sensorEvent.values[0] - stepCountForReset;
-            etStepCount.setText(String.valueOf(stepCountSinceLastReset));
+            String value = String.valueOf(stepCountSinceLastReset);
+            tvStepCount.setText(value.substring(0, value.length() - 2));
+            String left = Float.toString((1200 - stepCountSinceLastReset));
+            stepsLeft.setText(left.substring(0, left.length() - 2) + " STEPS LEFT");
+            stepProgress.setProgressWithAnimation(Math.round((float)stepCountSinceLastReset/1200 * 100));
+            dailyProgress.setProgress(Math.round(stepCountSinceLastReset/1200 * 100), true);
         }
     }
 

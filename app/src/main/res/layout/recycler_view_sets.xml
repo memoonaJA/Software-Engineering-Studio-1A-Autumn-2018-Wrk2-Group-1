@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/setCard"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/setNoTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set "
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/repGoalTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / "
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/lastModifiedTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last Modified: "
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/repeatIv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_replay_black_24dp" />
+
+            <ImageView
+                android:id="@+id/deleteSetIv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_clear_black_24dp" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
