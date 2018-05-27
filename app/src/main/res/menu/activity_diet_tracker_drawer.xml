@@ -24,6 +24,10 @@
             android:id="@+id/nav_stepTracker"
             android:icon="@drawable/ic_step"
             android:title="Step Tracker" />
+        <item
+            android:id="@+id/nav_levelTracker"
+            android:icon="@drawable/ic_levels"
+            android:title="Level Tracker???" />
     </group>
 
 </menu>

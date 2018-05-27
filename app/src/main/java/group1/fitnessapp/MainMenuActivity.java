@@ -268,6 +268,10 @@ public class MainMenuActivity extends AppCompatActivity
         startActivity(new Intent(this, StepCounterActivity.class));
     }
 
+    private void startLevelTracker(){
+        startActivity(new Intent(this, StepCounterActivity.class));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -283,6 +287,8 @@ public class MainMenuActivity extends AppCompatActivity
             startExerciseTracker();
         } else if (id == R.id.nav_stepTracker) {
             startStepTracker();
+        } else if (id == R.id.nav_levelTracker) {
+            startLevelTracker();
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
