@@ -35,12 +35,17 @@ public class BMICalculatorActivity extends AppCompatActivity {
                 String weightStr = weight.getText().toString();
 
                 if (!"".equals(heightStr) && !"".equals(weightStr)) {
-                    float heightValue = Float.parseFloat(heightStr) / 100;
-                    float weightValue = Float.parseFloat(weightStr);
+                    try{
+                        if (Float.parseFloat(heightStr) > 0 && Float.parseFloat(weightStr) > 0){
+                            float heightValue = Float.parseFloat(heightStr) / 100;
+                            float weightValue = Float.parseFloat(weightStr);
+                            float bmi = weightValue / (heightValue * heightValue);
 
-                    float bmi = weightValue / (heightValue * heightValue);
-
-                    displayBMI(bmi);
+                            displayBMI(bmi);
+                        }
+                    }catch (NumberFormatException e){
+                        e.printStackTrace();
+                    }
                 }
             }
         });
